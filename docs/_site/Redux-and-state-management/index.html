@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="description" content="An end-to-end solution for building high-quality PWAs">
+  <title>Redux And State Management &ndash; PWA Starter Kit</title>
+  <link rel="shortcut icon" sizes="32x32" href="/images/icon-32.png">
+  <meta name="theme-color" content="#000">
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <nav class="main-nav">
+    <a class="logo" href="/">PWA Starter Kit</a>
+    <div class="flex"></div>
+    <a class="main-nav-item" href="https://github.com/polymer/pwa-starter-kit">Github</a>
+    <a class="main-nav-item" href="/Setup">Get Started</a>
+    <a class="main-nav-item" href="/What's-in-the-box">Sample apps</a>
+  </nav>
+
+  <main>
+  <nav class="toc">
+    <ul data-depth="1">
+      <li data-level="H2">
+        <a href="/What's-in-the-box/">What's In The Box</a>
+      </li>
+      <ul data-depth="2">
+        <li data-level="H2">
+          <a href="/Setup/">Setup</a>
+        </li>
+        <li data-level="H2">
+          <a href="/Browser-support/">Browser Support</a>
+        </li>
+        <li data-level="H2">
+          <a href="/Home/">Sample apps</a>
+        </li>
+      </ul>
+      <li data-level="H2">
+        <a href="/Configuring-and-personalizing/">Configuring And Personalizing</a>
+      </li>
+
+      <li data-level="H2">
+        <a href="/Redux-and-state-management/">Redux And State Management</a>
+      </li>
+
+      <li data-level="H2">
+        <a href="/Building-&amp;-Deploying/">Building &amp; Deploying</a>
+      </li>
+
+      <li data-level="H2">Testing</li>
+      <ul data-depth="2">
+        <li data-level="H2">
+          <a href="/Performance-testing/">Performance Testing</a>
+        </li>
+        <li data-level="H2">
+          <a href="/Application-testing/">Application Testing</a>
+        </li>
+      </ul>
+    </ul>
+  </nav>
+
+  <article>
+    <h1>
+      Redux And State Management
+    </h1>
+
+    <p>This page will take you through the steps you need to do to use Redux to manage your application’s state.</p>
+
+<h2 id="table-of-contents">Table of contents</h2>
+
+<ul>
+  <li><a href="#general-principles">General principles</a>
+    <ul>
+      <li><a href="#some-definitions">Some definitions</a></li>
+      <li><a href="#naming-conventions">Naming conventions</a></li>
+      <li><a href="#polymer-specific-things-to-look-out-for">Polymer-specific things to look out for</a></li>
+    </ul>
+  </li>
+  <li><a href="#connecting-elements-to-the-store">Connecting elements to the store</a>
+    <ul>
+      <li><a href="#what-to-connect">What to connect</a></li>
+      <li><a href="#how-to-connect">How to connect</a>
+        <ul>
+          <li><a href="#creating-a-store">Creating a store</a></li>
+          <li><a href="#connecting-an-element-to-the-store">Connecting an element to the store</a></li>
+          <li><a href="#dispatching-actions">Dispatching actions</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="##case-study-walkthrough">Case study walkthrough</a>
+    <ul>
+      <li><a href="#example-1-counter">Example 1: Counter</a></li>
+      <li><a href="#example-2-shopping-cart">Example 2: Shopping Cart</a></li>
+      <li><a href="#routing">Routing</a></li>
+    </ul>
+  </li>
+  <li><a href="#patterns">Patterns</a>
+    <ul>
+      <li><a href="#connecting-dom-events-to-action-creators">Connecting dom events to action creators</a>
+        <ul>
+          <li><a href="#manually">Manually</a></li>
+          <li><a href="#automatically">Automatically</a></li>
+        </ul>
+      </li>
+      <li><a href="#reducers-slice-reducers">Reducers: slice reducers</a></li>
+      <li><a href="#avoid-duplicate-state">Avoid duplicate state</a></li>
+      <li><a href="#how-to-make-sure-third-party-components-dont-mutate-the-state">How to make sure third-party components don’t mutate the state</a></li>
+      <li><a href="#routing-1">Routing</a></li>
+      <li><a href="#lazy-loading">Lazy Loading</a></li>
+      <li><a href="#replicating-the-state-for-storage">Replicating the state for storage</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="general-principles">General principles</h2>
+<p><a href="https://redux.js.org/">Redux</a> is a small state management container, that is view agnostic and widely used. It is centered around the idea of separating your application logic (the application state) from your view layer, and having the store as a single source of truth for the application state. We recommend reading some of the <a href="https://redux.js.org/">Redux docs</a> for a good introduction, as well as this awesome <a href="https://code-cartoons.com/a-cartoon-intro-to-redux-3afb775501a6">cartoon intro to Redux</a> by Lin Clark.</p>
+
+<p>One of the neat features of Redux is that it lets you do <a href="https://code-cartoons.com/hot-reloading-and-time-travel-debugging-what-are-they-3c8ed2812f35">time travel debugging</a>; in particular, we use this <a href="https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en">Chrome extension</a>.</p>
+
+<h3 id="some-definitions">Some definitions</h3>
+
+<p>When working with Redux, a bunch of words get used a lot, that might sound confusing at first:</p>
+<ul>
+  <li><strong>state</strong>: this is the information contained by the app. In general, any element properties that you use could be considered the state</li>
+  <li><strong>store</strong>: the thing that holds the state. You can only have one store, and it is the source of all truth. You can get the state from the store via <code class="highlighter-rouge">store.getState()</code></li>
+  <li><strong>actions</strong>: represent the facts about “what happened” to the state, and are how the application communicates with the store (to tell it that something needs to be updated. You send an action <code class="highlighter-rouge">MEOW</code> to the store using <code class="highlighter-rouge">store.dispatch(MEOW)</code>.</li>
+  <li><strong>action creators</strong>: functions that create actions. They return an action, which can then be dispatched. You use an action creator in your app via <code class="highlighter-rouge">store.dispatch(doAMeow())</code>. Action creators can also dispatch asynchronous actions, which makes them very useful!</li>
+  <li><strong>reducers</strong>: describe how the state updates as a result of an action.They are functions that take the old state, an action, and (after doing some work), return a brand new copy of the state, with the right updates applied.</li>
+</ul>
+
+<h3 id="naming-conventions">Naming conventions</h3>
+<p>We recommend structuring your application code as follows:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>src
+├── store.js
+├── actions
+│   └── counter.js
+|   └── ...
+├── reducers
+│   └── counter.js
+|   └── ...
+└── components
+    └── simple-counter.js
+    └── my-app.js
+    └── ...
+</code></pre></div></div>
+
+<ul>
+  <li>Action creators and reducers can (but aren’t required) have the same name, and be named after the slice of the app’s data they deal with. For example, a shopping app could have the following reducers:
+    <ul>
+      <li><code class="highlighter-rouge">app.js</code> (to deal with big picture app-related data, such as online/offline status, route paths, etc)</li>
+      <li><code class="highlighter-rouge">products.js</code> for the list of products you can purchase</li>
+      <li><code class="highlighter-rouge">cart.js</code> for the shopping cart</li>
+      <li>etc.</li>
+    </ul>
+  </li>
+  <li>Action type
+    <ul>
+      <li>verb(+noun, optional), present tense: <code class="highlighter-rouge">ADD_TODO</code>, <code class="highlighter-rouge">FETCH</code>, <code class="highlighter-rouge">FETCH_ITEMS</code>, <code class="highlighter-rouge">RECEIVE_ITEMS</code>.</li>
+      <li>These should represent what’s about to happen, not what has already happened.</li>
+      <li>Action creator
+        <ul>
+          <li>Same as action type, camel cased (<code class="highlighter-rouge">addTodo</code> -&gt; <code class="highlighter-rouge">ADD_TODO</code>)</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Selector
+    <ul>
+      <li><code class="highlighter-rouge">categorySelector</code>/<code class="highlighter-rouge">itemsSelector</code> vs <code class="highlighter-rouge">getCategory</code>/<code class="highlighter-rouge">getItems</code> (to distinguish that one is a selector, whereas the <code class="highlighter-rouge">get*</code> methods could just be non-memoized selectors</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="polymer-specific-things-to-look-out-for">Polymer-specific things to look out for</h3>
+<p>In a Polymer app, to make sure that your elements are not accidentally modifying data that’s in the store, you should:</p>
+<ul>
+  <li>Not use any two-way data binding: ``</li>
+  <li>Not use any <code class="highlighter-rouge">this.set('foo.id', bar)</code> data setters</li>
+  <li>In your own app elements, don’t use <code class="highlighter-rouge">notify:true</code> properties
+    <ul>
+      <li>If you’re using a third-party element that does have notifying properties, use their <code class="highlighter-rouge">foo-changed</code> events too hook up those changes to the store (in the connected parent element)</li>
+    </ul>
+  </li>
+  <li>Use any property assignments (<code class="highlighter-rouge">this.foo = bar</code>) or <code class="highlighter-rouge">this._setFoo</code> to set read-only properties
+    <ul>
+      <li>In particular, connected elements can set properties in their <code class="highlighter-rouge">_stateChanged()</code> methods alone</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="connecting-elements-to-the-store">Connecting elements to the store</h2>
+
+<h3 id="what-to-connect">What to connect</h3>
+<p>Generally, anything that needs to have direct access to the store data should be considered a <strong>connected</strong> element. This includes both updating the state (by calling <code class="highlighter-rouge">store.dispatch</code>), or consuming the state (by calling <code class="highlighter-rouge">store.subscribe</code>). However, if the element only needs to consume store data, it could receive this data via data bindings from a connected parent element. If you think about a shopping cart example: the cart itself needs to be connected to the store, since “what’s in the cart” is part of the application’s state, but the reusable elements that are rendering each item in the cart don’t need to be connected (since they can just receive their data through a data binding)</p>
+
+<p>Since this is a very application specific decision, one way to start looking at it is to try connecting your lazy-loaded elements, and then go up or down one level from there. That might end up looking something like:
+<img width="785" alt="screen shot 2018-01-25 at 12 22 39 pm" src="https://user-images.githubusercontent.com/1369170/35410478-7373c98a-01ca-11e8-9f7f-4b95c8a4f47c.png" /></p>
+
+<p>In this example, only <code class="highlighter-rouge">my-app</code> and <code class="highlighter-rouge">my-view1</code> are connected. Since <code class="highlighter-rouge">a-element</code> is more of a reusable component rather than an application level component, even if it needs to update the application’s data, it will communicate this via a DOM event, like <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/components/counter-element.js#L49">this</a>.</p>
+
+<h2 id="how-to-connect">How to connect</h2>
+<p>If you want to follow along with actual code, we’ve included a basic Redux <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/components/my-view2.js">counter example</a> in <code class="highlighter-rouge">pwa-starter-kit</code>.</p>
+
+<h3 id="creating-a-store">Creating a store</h3>
+<p>If you want to create a simple store, that is not lazy loading reducers, then you probably want something like this:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">const</span> <span class="nx">store</span> <span class="o">=</span> <span class="nx">createStore</span><span class="p">(</span>
+  <span class="nx">reducer</span><span class="p">,</span>
+  <span class="nx">compose</span><span class="p">(</span><span class="nx">applyMiddleware</span><span class="p">(</span><span class="nx">thunk</span><span class="p">))</span>
+<span class="p">);</span>
+</code></pre></div></div>
+<p>Note that this still isn’t the most basic store you can have, since it adds the <a href="https://github.com/gaearon/redux-thunk">redux-thunk</a> middleware – this allows you to dispatch async actions, which for any medium-complexity app is a requirement. In most cases however, you’re going to be lazy loading routes, and they should lazy load their reducers, so you want a store that can replace its reducers after it’s been initialized, which is why <code class="highlighter-rouge">pwa-starter-kit</code> initializes the store with a <code class="highlighter-rouge">lazyReducerEnhancer</code> and the <code class="highlighter-rouge">redux-thunk</code>:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">const</span> <span class="nx">store</span> <span class="o">=</span> <span class="nx">createStore</span><span class="p">(</span>
+  <span class="p">(</span><span class="nx">state</span><span class="p">,</span> <span class="nx">action</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">state</span><span class="p">,</span>
+  <span class="nx">compose</span><span class="p">(</span><span class="nx">lazyReducerEnhancer</span><span class="p">(</span><span class="nx">combineReducers</span><span class="p">),</span> <span class="nx">applyMiddleware</span><span class="p">(</span><span class="nx">thunk</span><span class="p">))</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<p>You can find more details on the <code class="highlighter-rouge">lazyReducerEnhancer</code> in the <a href="#lazy-loading">Lazy Loading</a> section.</p>
+
+<h3 id="connecting-an-element-to-the-store">Connecting an element to the store</h3>
+<p>An element that is connected should call <code class="highlighter-rouge">store.subscribe</code> in the constructor, and only update its properties in the <code class="highlighter-rouge">update</code> method (if it needs to). We use a mixin (<a href="https://github.com/Polymer/pwa-helpers/blob/master/connect-mixin.js"><code class="highlighter-rouge">connect-mixin.js</code></a>) from <code class="highlighter-rouge">pwa-helpers</code> that does all the connection boilerplate for you, and expects you to implement the <code class="highlighter-rouge">_stateChanged</code> method. Example use:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LitElement</span><span class="p">,</span> <span class="nx">html</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'@polymer/lit-element/lit-element.js'</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">connect</span> <span class="p">}</span> <span class="k">from</span>  <span class="s1">'@polymer/pwa-helpers/connect-mixin.js'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">store</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'./store/store.js'</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nx">MyElement</span> <span class="kd">extends</span> <span class="nx">connect</span><span class="p">(</span><span class="nx">store</span><span class="p">)(</span><span class="nx">LitElement</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kr">static</span> <span class="kd">get</span> <span class="nx">is</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="s1">'my-element'</span><span class="p">;</span> <span class="p">}</span>
+  
+  <span class="kr">static</span> <span class="kd">get</span> <span class="nx">properties</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="p">{</span>
+    <span class="na">clicks</span><span class="p">:</span> <span class="nb">Number</span><span class="p">,</span>
+    <span class="na">value</span><span class="p">:</span> <span class="nb">Number</span>
+  <span class="p">}}</span>
+
+  <span class="nx">_render</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">html</span><span class="s2">`...`</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// If you don’t implement this method, you will get a</span>
+  <span class="c1">// warning in the console.</span>
+  <span class="nx">_stateChanged</span><span class="p">(</span><span class="nx">state</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">clicks</span> <span class="o">=</span> <span class="nx">state</span><span class="p">.</span><span class="nx">counter</span><span class="p">.</span><span class="nx">clicks</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">state</span><span class="p">.</span><span class="nx">counter</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Note that <code class="highlighter-rouge">_stateChanged</code> gets called <strong>any</strong> time the store updates, not when only the things you care about update. So in the example above, <code class="highlighter-rouge">_stateChanged</code> could be called multiple times without <code class="highlighter-rouge">state.counter.clicks</code> and <code class="highlighter-rouge">state.counter.value</code> ever changing. If you’re doing any expensive work in <code class="highlighter-rouge">_stateChanged</code>, such as transforming the data from the Redux store (with something like <code class="highlighter-rouge">Object.values(state.data.someArray)</code>), consider moving that logic into the <code class="highlighter-rouge">_render()</code> function (which is called only if the properties update), using a selector, or adding some form of dirty checking:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">_stateChanged</span><span class="p">(</span><span class="nx">state</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">clicks</span> <span class="o">!==</span> <span class="nx">state</span><span class="p">.</span><span class="nx">counter</span><span class="p">.</span><span class="nx">clicks</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">clicks</span> <span class="o">=</span> <span class="nx">state</span><span class="p">.</span><span class="nx">counter</span><span class="p">.</span><span class="nx">clicks</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h3 id="dispatching-actions">Dispatching actions</h3>
+<p>If an element needs to dispatch an action to update the store, it should call an action creator:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">increment</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'./store/actions/counter.js'</span><span class="p">;</span>
+
+<span class="nx">_firstRendered</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// Every time the display of the counter updates, save</span>
+    <span class="c1">// these values in the store</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">'counter-incremented'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">store</span><span class="p">.</span><span class="nx">dispatch</span><span class="p">(</span><span class="nx">increment</span><span class="p">());</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Action creators say what the system <em>should</em> do, not what it has already done. This action creator could return a synchronous action:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">const</span> <span class="nx">increment</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="na">type</span><span class="p">:</span> <span class="nx">INCREMENT</span>
+  <span class="p">};</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>An asynchronous one,</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">const</span> <span class="nx">increment</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">(</span><span class="nx">dispatch</span><span class="p">,</span> <span class="nx">getState</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">// Do some sort of work.</span>
+  <span class="kd">const</span> <span class="nx">state</span> <span class="o">=</span> <span class="nx">getState</span><span class="p">();</span>
+  <span class="kd">const</span> <span class="nx">howMuch</span>  <span class="o">=</span> <span class="nx">state</span><span class="p">.</span><span class="nx">counter</span><span class="p">.</span><span class="nx">doubleIncrement</span> <span class="p">?</span> <span class="mi">2</span> <span class="p">:</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="nx">dispatch</span><span class="p">({</span>
+      <span class="na">type</span><span class="p">:</span> <span class="nx">INCREMENT</span><span class="p">,</span>
+      <span class="nx">howMuch</span><span class="p">,</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+<p>Or dispatch the result of another action creator:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">const</span> <span class="nx">increment</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">(</span><span class="nx">dispatch</span><span class="p">,</span> <span class="nx">getState</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">// Do some sort of work.</span>
+  <span class="kd">const</span> <span class="nx">state</span> <span class="o">=</span> <span class="nx">getState</span><span class="p">();</span>
+  <span class="kd">const</span> <span class="nx">howMuch</span> <span class="o">=</span> <span class="nx">state</span><span class="p">.</span><span class="nx">counter</span><span class="p">.</span><span class="nx">doubleIncrement</span><span class="p">?</span> <span class="mi">2</span> <span class="p">:</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="nx">dispatch</span><span class="p">(</span><span class="nx">incrementBy</span><span class="p">(</span><span class="nx">howMuch</span><span class="p">));</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="case-study-walkthrough">Case study walkthrough</h2>
+<p>The goal of this walkthrough is to demonstrate how to get started with Redux, by explaining how we added 2 of the standard Redux examples in the <code class="highlighter-rouge">pwa-starter-kit</code> template app.</p>
+
+<h3 id="example-1-counter">Example 1: Counter</h3>
+<p>The <a href="https://redux.js.org/docs/introduction/Examples.html#counter-vanilla">counter</a> example is very simple: we’re going to add a counter custom element (that you can imagine is a reusable, third party element) to <code class="highlighter-rouge">my-view2.js</code>. This example is very detailed, and goes through every line of code that needs to change. If you want a higher level example, check out Example 2. The interaction between the elements, the action creators, action, reducers and the store looks something like this:
+<img width="886" alt="screen shot 2018-01-25 at 12 44 24 pm" src="https://user-images.githubusercontent.com/1369170/35411408-7edd9d84-01cd-11e8-9044-d817dc1967da.png" /></p>
+
+<h4 id="counterelementjs"><code class="highlighter-rouge">counter.element.js</code></h4>
+<p>This is a <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/components/counter-element.js">plain element</a> that’s not connected to the Redux store. It has two properties, <code class="highlighter-rouge">clicks</code> and <code class="highlighter-rouge">value</code>, and 2 buttons that increment or decrement the value (and always increment <code class="highlighter-rouge">clicks</code>).</p>
+
+<h4 id="my-view2js"><code class="highlighter-rouge">my-view2.js</code></h4>
+<p>This element is an <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/components/my-view2.js">app-level element</a> (as opposed to a reusable element), and it’s connected to the store. This means that it will be able to read and update the application’s state – in particular, the value/clicks properties from <code class="highlighter-rouge">counter-element</code>. We need to:</p>
+<ul>
+  <li>Add <code class="highlighter-rouge">counter-element</code> to this view. Note that we pass the state <strong>down</strong> to the element, since the state lives in the Redux store, not in the element. We do this because even though the <code class="highlighter-rouge">counter-element</code> updates <em>its</em> internal properties every time you click any of the buttons, that may not necessarily be the true state of the app – imagine a more complex example, where a different view is also updating the value of this counter. The store is then the only source of truth for the data, and the <code class="highlighter-rouge">counter-element</code> must always reflect that.
+```html</li>
+</ul>
+<counter-element value="${props._value}" clicks="${props._clicks}"></counter-element>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- To demonstrate that it is the Redux store driving the state, and not `counter-element`’s internal, hidden state, we also added the `clicks` property to the circle in the header:
+```html
+&lt;div class="circle"&gt;${props._clicks}&lt;/div&gt;
+</code></pre></div></div>
+<ul>
+  <li>Connect the view to the store:
+    <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">connect</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'@polymer/pwa-helpers/connect-mixin.js'</span><span class="p">;</span> 
+<span class="kd">class</span> <span class="nx">MyView2</span> <span class="kd">extends</span> <span class="nx">connect</span><span class="p">(</span><span class="nx">store</span><span class="p">)(</span><span class="nx">LitElement</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">...</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Lazily load the reducers. You don’t <em>have</em> to do this (especially if you’re prototyping), but since this view is lazy loaded, its reducers should be as well (to follow the “don’t do anything until you actually need it” PRPL approach)
+    <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">counter</span> <span class="k">from</span> <span class="s1">'../reducers/counter.js'</span><span class="p">;</span>
+<span class="nx">store</span><span class="p">.</span><span class="nx">addReducers</span><span class="p">({</span>
+<span class="nx">counter</span>
+<span class="p">});</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Implement the <code class="highlighter-rouge">_stateChanged</code> method, which is called when anything is updated in the store. Since the store is the source of truth for the 2 properties (rather than <code class="highlighter-rouge">counter-element</code> itself), any time the Redux store updates we need to update any local properties; this keeps <code class="highlighter-rouge">counter-element</code> up to-date
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>_stateChanged(state) {
+this._clicks = state.counter.clicks;
+this._value = state.counter.value;
+}
+</code></pre></div>    </div>
+  </li>
+  <li>Note that here both <code class="highlighter-rouge">_clicks</code> and <code class="highlighter-rouge">_value</code> start with an underscore, which means they are protected – we don’t expect anyone from <em>outside</em> the <code class="highlighter-rouge">&lt;my-view2&gt;</code> element to want to modify them</li>
+  <li>In turn, when <code class="highlighter-rouge">counter-element</code> updates its value (because the buttons were clicked), we listen to its change events and dispatch an action creator to the store:
+    <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">this</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">'counter-incremented'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+<span class="nx">store</span><span class="p">.</span><span class="nx">dispatch</span><span class="p">(</span><span class="nx">increment</span><span class="p">());</span>
+<span class="p">})</span>
+</code></pre></div>    </div>
+  </li>
+  <li><code class="highlighter-rouge">increment</code> is an action creator. It is defined in <code class="highlighter-rouge">src/actions/counter.js</code>, and dispatches an <code class="highlighter-rouge">INCREMENT</code> action (and the same for <code class="highlighter-rouge">decrement</code>). When the store receives this action, it needs to update the state. This is done in the <code class="highlighter-rouge">src/reducers/counter.js</code> reducer.</li>
+</ul>
+
+<h3 id="example-2-shopping-cart">Example 2: Shopping Cart</h3>
+<p>The <a href="https://redux.js.org/docs/introduction/Examples.html#shopping-cart">shopping cart example</a> is a little more complex. The main view element (<code class="highlighter-rouge">my-view3.js</code>) contains <code class="highlighter-rouge">&lt;shop-products&gt;</code>, a list of products that you can choose from, and <code class="highlighter-rouge">&lt;shop-cart&gt;</code>, the shopping cart. You can select products from the list to add them to the cart; each product has a limited stock, and can run out. You can perform a checkout in the cart, which has a probability of failing (which in real life could fail because of credit card validation, server errors, etc). It looks like this:
+<img width="819" alt="screen shot 2018-01-25 at 12 50 22 pm" src="https://user-images.githubusercontent.com/1369170/35411643-53dccc62-01ce-11e8-8799-6a48da8901a5.png" /></p>
+
+<h4 id="my-view3js"><code class="highlighter-rouge">my-view3.js</code></h4>
+<p>This is a connected element that displays both the list of products, the cart, and the Checkout button. It is only connected because it needs to display conditional UI, based on whether the cart has any items (i.e. show a Checkout button or not). This could’ve been an unconnected element if the Checkout button belonged to the cart, for example.</p>
+<ul>
+  <li>Pressing the Checkout button calls the <code class="highlighter-rouge">checkout</code> action creator. In this action creator you would do any credit cart/server validations, so if the operation cannot be completed, you would fire <code class="highlighter-rouge">CHECKOUT_FAILURE</code> here. We simulate that by flipping a coin, and conditionally dispatching the async action</li>
+  <li>If the checkout action succeeds, then the <code class="highlighter-rouge">products</code> object will be updated (with the new stock), and the <code class="highlighter-rouge">cart</code> will be reset to its initial value (empty)</li>
+  <li>One thing to note: in the <code class="highlighter-rouge">src/reducers/shop.js</code> reducer we use a lot of slice reducers. A slice reducer is responsible for a slice (yes, really) of the whole store (for example, one product item) and updating it. To update the available stock for a specific item ID in the store, we call the <code class="highlighter-rouge">products</code> slide reducer (to reduce the whole store to just the products), then the <code class="highlighter-rouge">product</code> slice reducer for the product ID passed in the action.</li>
+</ul>
+
+<h4 id="shop-productsjs"><code class="highlighter-rouge">shop-products.js</code></h4>
+<p>This element gets the list of products from the store by dispatching the <code class="highlighter-rouge">getAllProducts</code> action creator. When the store is updated (by fetching the products from a service, for example), its <code class="highlighter-rouge">_stateChanged</code> method is called, which populates a <code class="highlighter-rouge">products</code> object. Finally, this object is used to render the list of products.</p>
+<ul>
+  <li><code class="highlighter-rouge">getAllProducts</code> is an action creator that simulates getting the data from a service (it doesn’t, it gets it from a local object, but that’s where you would out that logic). When the data is ready, it dispatches an async <code class="highlighter-rouge">GET_PRODUCTS</code> action.</li>
+  <li>Note that whenever a product is added to the cart, the <code class="highlighter-rouge">addToCart</code> action creator is dispatched. This updates both the <code class="highlighter-rouge">products</code> and <code class="highlighter-rouge">cart</code> objects in the Redux store, which will in turn call <code class="highlighter-rouge">_stateChanged</code> in both <code class="highlighter-rouge">shop-products</code> and <code class="highlighter-rouge">shop-cart</code></li>
+  <li>Adding an item to the cart dispatches the <code class="highlighter-rouge">addToCart</code> action creator, which first double-checks the stock (on the Redux side) before actually adding the item to the cart. This is done to avoid any front-end hacks where you could add more items to the cart than in the stock 😅</li>
+</ul>
+
+<h4 id="shop-cartjs"><code class="highlighter-rouge">shop-cart.js</code></h4>
+<p>Similar to <code class="highlighter-rouge">shop-products</code>, this element is also connected to the store and observes both the <code class="highlighter-rouge">products</code> and <code class="highlighter-rouge">cart</code> state. One of the Redux rules is that there should be only one source of truth, and you should not be duplicating data. For this reason, <code class="highlighter-rouge">products</code> is the source of truth (that contains all the available items), and <code class="highlighter-rouge">cart</code> contains the indexes, and number of, items that have been added to the cart.</p>
+
+<h3 id="routing">Routing</h3>
+<p>We use a very simple (but flexible) redux-friendly router, that uses the window location and stores it in store. We do this by using the <code class="highlighter-rouge">installRouter</code> helper method provided from the <code class="highlighter-rouge">pwa-helpers</code> package:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">installRouter</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'@polymer/pwa-helpers/router.js'</span><span class="p">;</span>
+<span class="nx">_firstRendered</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">installRouter</span><span class="p">((</span><span class="nx">location</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">_locationChanged</span><span class="p">(</span><span class="nx">location</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="patterns">Patterns</h2>
+
+<h3 id="connecting-dom-events-to-action-creators">Connecting DOM events to action creators</h3>
+<p>If you don’t want to connect every element to the store (and you shouldn’t), unconnected elements will have to communicate the need to update the state in the store.</p>
+
+<h4 id="manually">Manually</h4>
+<p>You can do this manually by firing event. If <code class="highlighter-rouge">&lt;child-element&gt;</code> is unconnected but displays and modifies a property <code class="highlighter-rouge">foo</code>:</p>
+<ul>
+  <li>Whenever foo is modified, <code class="highlighter-rouge">&lt;child-element&gt;</code> fires an event:
+    <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">_onIncrement</span><span class="p">()</span> <span class="p">{</span>
+<span class="k">this</span><span class="p">.</span><span class="nx">value</span><span class="o">++</span><span class="p">;</span>
+<span class="k">this</span><span class="p">.</span><span class="nx">dispatchEvent</span><span class="p">(</span><span class="k">new</span> <span class="nx">CustomEvent</span><span class="p">(</span><span class="s1">'counter-incremented'</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>The connected parent of <code class="highlighter-rouge">&lt;child-element&gt;</code> can listen to this event and dispatch an action to the store:
+```html</li>
+</ul>
+<p>&lt;counter-element on-counter-incremented=”${() =&gt; store.dispatch(increment())}”</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+Or in JavaScript,
+```js
+_firstRendered() {
+  this.addEventListener('counter-incremented', function() {
+    store.dispatch(increment());
+  });
+}
+</code></pre></div></div>
+
+<h4 id="automatically">Automatically</h4>
+<p>Alternatively, you can write a helper to automatically convert any Polymer <code class="highlighter-rouge">foo-changed</code> property change event into a redux action. Note that this requires the <code class="highlighter-rouge">&lt;child-element&gt;</code>’s properties to by notifying (i.e. have <code class="highlighter-rouge">notify: true</code>), which isn’t necessarily true of all third party elements out there. Here’s an <a href="https://gist.github.com/kevinpschaaf/995c9d1fd0f58fe021b174c4238b38c3#file-5-connect-element-mixin-js">example</a> of that.</p>
+
+<h3 id="reducers-slice-reducers">Reducers: slice reducers</h3>
+
+<p>To make your app more modular, you can split the main state object into parts (“slices”) and have smaller “slice reducers” operate on each part (<a href="https://redux.js.org/docs/recipes/reducers/SplittingReducerLogic.html">read more about slice reducers</a>). With the <code class="highlighter-rouge">lazyReducerEnhancer</code>, your app can lazily add slice reducers as necessary (e.g. add the <code class="highlighter-rouge">counter</code> slice reducer when <code class="highlighter-rouge">my-view2.js</code> is imported since only <code class="highlighter-rouge">my-view2</code> operates on that part of the state).</p>
+
+<p><strong><code class="highlighter-rouge">src/store.js:</code></strong></p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">const</span> <span class="nx">store</span> <span class="o">=</span> <span class="nx">createStore</span><span class="p">(</span>
+  <span class="p">(</span><span class="nx">state</span><span class="p">,</span> <span class="nx">action</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">state</span><span class="p">,</span>
+  <span class="nx">compose</span><span class="p">(</span><span class="nx">lazyReducerEnhancer</span><span class="p">(</span><span class="nx">combineReducers</span><span class="p">),</span> <span class="nx">applyMiddleware</span><span class="p">(</span><span class="nx">thunk</span><span class="p">))</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<p><strong><code class="highlighter-rouge">src/components/my-view2.js:</code></strong></p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// This element is connected to the redux store.</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">store</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'../store.js'</span><span class="p">;</span>
+
+<span class="c1">// We are lazy loading its reducer.</span>
+<span class="k">import</span> <span class="nx">counter</span> <span class="k">from</span> <span class="s1">'../reducers/counter.js'</span><span class="p">;</span>
+<span class="nx">store</span><span class="p">.</span><span class="nx">addReducers</span><span class="p">({</span>
+  <span class="nx">counter</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="avoid-duplicate-state">Avoid duplicate state</h3>
+
+<p>We avoid storing duplicate data in the state by using the <a href="https://github.com/reactjs/reselect">Reselect</a> library. For example, the state may contain a list of items, and one of them is the selected item (e.g. based on the URL). Instead of storing the selected item separately, create a selector that computes the selected item:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">createSelector</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'reselect'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">locationSelector</span> <span class="o">=</span> <span class="nx">state</span> <span class="o">=&gt;</span> <span class="nx">state</span><span class="p">.</span><span class="nx">location</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">itemsSelector</span> <span class="o">=</span> <span class="nx">state</span> <span class="o">=&gt;</span> <span class="nx">state</span><span class="p">.</span><span class="nx">items</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">selectedItemSelector</span> <span class="o">=</span> <span class="nx">createSelector</span><span class="p">(</span>
+  <span class="nx">locationSelector</span><span class="p">,</span>
+  <span class="nx">itemsSelector</span><span class="p">,</span>
+  <span class="p">(</span><span class="nx">location</span><span class="p">,</span> <span class="nx">items</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">items</span><span class="p">[</span><span class="nx">location</span><span class="p">.</span><span class="nx">pathname</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span>
+<span class="p">);</span>
+
+<span class="c1">// To get the selected item:</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">selectedItemSelector</span><span class="p">(</span><span class="nx">state</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>To see an example of this, check out the cart example’s <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/components/my-view3.js#L89">cart quantity selector</a> or the <a href="https://github.com/PolymerLabs/polymer-redux-hn/blob/master/src/components/hn-item.js#L70">item selector</a> from the <a href="https://github.com/PolymerLabs/polymer-redux-hn">Redux-HN</a> sample app. In both exampls, the selector is actually defined in a reducer, since it’s being used both on the Redux side, as well as in the view layer.</p>
+
+<h3 id="how-to-make-sure-third-party-components-dont-mutate-the-state">How to make sure third-party components don’t mutate the state</h3>
+<p>Most third-party components were not written to be used in an immutable way, and are not connected to the Redux store so you can’t guarantee that they will not try to update the store. For example, <code class="highlighter-rouge">paper-input</code> has a <code class="highlighter-rouge">value</code> property, that it updates based on internal actions (i.e. you typing, validating, etc). To make sure that elements like this don’t update the store:</p>
+<ul>
+  <li>Use one-way data bindings to pass primitives (Strings, Numbers, etc) down to the element.
+    <ul>
+      <li><code class="highlighter-rouge">&lt;paper-input value="${foo}"&gt;&lt;/paper-input&gt;</code></li>
+      <li>Because it’s a primitive value, paper-input receives a copy of <code class="highlighter-rouge">foo</code>. When it updates <code class="highlighter-rouge">foo</code>, it only updates <strong>its</strong> copy, not the actual property in the store</li>
+      <li>Listen to <code class="highlighter-rouge">foo-changed</code> events outside the element, and dispatch an action to update the store from there (<a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/components/my-view2.js#L47">example</a>)</li>
+    </ul>
+  </li>
+  <li>Since arrays/objects are mutable, pass down a <strong>copy</strong> of an array or object down to the element
+    <ul>
+      <li><code class="highlighter-rouge">&lt;other-input data="${_copy(fooArray)}"&gt;&lt;/other-input&gt;</code></li>
+      <li><code class="highlighter-rouge">&lt;other-input data="${_deepCopy(fooObj)}"&gt;&lt;/other-input&gt;</code></li>
+      <li>Listen to change events as above to dispatch an action to update the store</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="routing-1">Routing</h3>
+<p>With Redux, you’re basically on your own for routing. However, we have provided a <a href="https://github.com/Polymer/pwa-helpers/blob/master/router.js">helper router</a> to get you started. Our suggestion is to update the location state based on <code class="highlighter-rouge">window.location</code>. That is, whenever a link is clicked (or the user navigates back), an action is dispatched to update the state based on the location. This works well with time-travel debugging - jumping to a previous state doesn’t affect the URL bar or history stack.</p>
+
+<p>Example of installing and using the router:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ...</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">installRouter</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'@polymer/pwa-helpers/router.js'</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nx">MyApp</span> <span class="kd">extends</span> <span class="nx">connect</span><span class="p">(</span><span class="nx">store</span><span class="p">)(</span><span class="nx">LitElement</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+    <span class="nx">_firstRendered</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">installRouter</span><span class="p">((</span><span class="nx">location</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">_locationChanged</span><span class="p">(</span><span class="nx">location</span><span class="p">));</span>
+
+      <span class="c1">// The argument passed to installRouter is a callback. If you don’t</span>
+      <span class="c1">// have any other work to do other than dispatching an action, you</span>
+      <span class="c1">// can also write something like:</span>
+      <span class="c1">// installRouter((location) =&gt; store.dispatch(navigate(location.pathname)));</span>
+    <span class="p">}</span>
+
+    <span class="nx">_locationChanged</span><span class="p">(</span><span class="nx">location</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// What action creator you dispatch and what part of the location</span>
+      <span class="c1">// will depend on your app.    </span>
+      <span class="nx">store</span><span class="p">.</span><span class="nx">dispatch</span><span class="p">(</span><span class="nx">navigate</span><span class="p">(</span><span class="nx">location</span><span class="p">.</span><span class="nx">pathname</span><span class="p">));</span>
+
+      <span class="c1">// Do other work, if needed, like closing drawers, etc.</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="lazy-loading">Lazy loading</h3>
+<p>One of the main aspects of the PRPL pattern is lazy loading your application’s components as they are needed. If one of these lazy-loaded elements is connected to the store, then your app needs to be able to lazy load that element’s reducers as well.</p>
+
+<p>There are many ways in which you can do this. We’ve implemented one of them as a <a href="https://github.com/Polymer/pwa-helpers/blob/master/lazy-reducer-enhancer.js">helper</a>, which can be added to the store:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">lazyReducerEnhancer</span> <span class="k">from</span> <span class="s1">'@polymer/pwa-helpers/lazy-reducer-enhancer.js'</span><span class="p">;</span>
+
+<span class="c1">// Not-lazy loaded reducers that are initially loaded.</span>
+<span class="k">import</span> <span class="nx">app</span> <span class="k">from</span> <span class="s1">'./reducers/app.js'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">store</span> <span class="o">=</span> <span class="nx">createStore</span><span class="p">(</span>
+  <span class="p">(</span><span class="nx">state</span><span class="p">,</span> <span class="nx">action</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">state</span><span class="p">,</span>
+  <span class="nx">compose</span><span class="p">(</span><span class="nx">lazyReducerEnhancer</span><span class="p">,</span> <span class="nx">applyMiddleware</span><span class="p">(</span><span class="nx">thunk</span><span class="p">))</span>
+<span class="p">);</span>
+
+<span class="c1">// Initially loaded reducers.</span>
+<span class="nx">store</span><span class="p">.</span><span class="nx">addReducers</span><span class="p">({</span>
+  <span class="nx">app</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>In this example, the application will boot up and install the <code class="highlighter-rouge">app</code> reducers, but no others. In your lazy-loaded element, to load its reducer, all you need to do is call <code class="highlighter-rouge">store.addReducers</code>:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// If this element was lazy loaded, we must also install its reducer</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">someReducer</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'./store/reducers/one.js'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">someOtherReducer</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'./store/reducers/two.js'</span><span class="p">;</span>
+
+<span class="c1">// Lazy-load the reducer</span>
+<span class="nx">store</span><span class="p">.</span><span class="nx">addReducers</span><span class="p">({</span><span class="nx">someReducer</span><span class="p">,</span> <span class="nx">someOtherReducer</span><span class="p">});</span>
+
+<span class="kd">class</span> <span class="nx">MyElement</span> <span class="kd">extends</span> <span class="p">...</span> <span class="p">{</span>
+<span class="err">…</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="replicating-the-state-for-storage">Replicating the state for storage</h3>
+<p>One of the things your app might want to do is save the state of the app in a storage location (like a database, or <code class="highlighter-rouge">localStorage</code>. Redux is very useful for this, since you basically just need to install a new reducer to subscribe to the state, that will dump the state into storage.</p>
+
+<p>To do this, we can first create two functions, called <code class="highlighter-rouge">saveState</code> and <code class="highlighter-rouge">loadState</code>, to read to/from storage:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">const</span> <span class="nx">saveState</span> <span class="o">=</span> <span class="p">(</span><span class="nx">state</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">stringifiedState</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">state</span><span class="p">);</span>
+  <span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span><span class="p">(</span><span class="nx">MY_KEY</span><span class="p">,</span> <span class="nx">stringifiedState</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">loadState</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">json</span> <span class="o">=</span> <span class="nx">localStorage</span><span class="p">.</span><span class="nx">getItem</span><span class="p">(</span><span class="nx">MY_KEY</span><span class="p">)</span> <span class="o">||</span> <span class="s1">'{}'</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">state</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">json</span><span class="p">);</span>
+ 
+  <span class="k">if</span> <span class="p">(</span><span class="nx">state</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">state</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">undefined</span><span class="p">;</span>  <span class="c1">// To use the defaults in the reducers</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Now, in <code class="highlighter-rouge">store.js</code>, we basically want to use the result of <code class="highlighter-rouge">loadState()</code> as the default state in the store, and call <code class="highlighter-rouge">saveState()</code> every time the store updates:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">const</span> <span class="nx">store</span> <span class="o">=</span> <span class="nx">createStore</span><span class="p">(</span>
+  <span class="p">(</span><span class="nx">state</span><span class="p">,</span> <span class="nx">action</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">state</span><span class="p">,</span>
+  <span class="nx">loadState</span><span class="p">(),</span>  <span class="c1">// If there is local storage data, load it.</span>
+  <span class="nx">compose</span><span class="p">(</span><span class="nx">lazyReducerEnhancer</span><span class="p">(</span><span class="nx">combineReducers</span><span class="p">),</span> <span class="nx">applyMiddleware</span><span class="p">(</span><span class="nx">thunk</span><span class="p">))</span>
+<span class="p">);</span>
+
+<span class="c1">// This subscriber writes to local storage anytime the state updates.</span>
+<span class="nx">store</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">saveState</span><span class="p">(</span><span class="nx">store</span><span class="p">.</span><span class="nx">getState</span><span class="p">());</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>That’s it! If you want to see a demo of this in a project, the <a href="https://github.com/notwaldorf/flash-cards/blob/master/src/localStorage.js"><strong>Flash-Cards</strong></a> app implements this pattern.</p>
+
+  </article>
+</main>
+
+
+  <footer>
+    <a target="_blank" href="http://polymer.github.io/LICENSE.txt" data-outbound="license-txt">© 2018 Google</a>
+  </footer>
+</body>
+</html>

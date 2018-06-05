@@ -1,0 +1,52 @@
+---
+layout: default
+---
+<main>
+  <nav class="toc">
+    <ul data-depth="1">
+      <li data-level="H2">
+        <a href="{{site.baseurl}}/What's-in-the-box/">What's In The Box</a>
+      </li>
+      <ul data-depth="2">
+        <li data-level="H2">
+          <a href="{{site.baseurl}}/Setup/">Setup</a>
+        </li>
+        <li data-level="H2">
+          <a href="{{site.baseurl}}/Browser-support/">Browser Support</a>
+        </li>
+        <li data-level="H2">
+          <a href="{{site.baseurl}}/Home/">Sample apps</a>
+        </li>
+      </ul>
+      <li data-level="H2">
+        <a href="{{site.baseurl}}/Configuring-and-personalizing/">Configuring And Personalizing</a>
+      </li>
+
+      <li data-level="H2">
+        <a href="{{site.baseurl}}/Redux-and-state-management/">Redux And State Management</a>
+      </li>
+
+      <li data-level="H2">
+        <a href="{{site.baseurl}}/Building-&amp;-Deploying/">Building &amp; Deploying</a>
+      </li>
+
+      <li data-level="H2">Testing</li>
+      <ul data-depth="2">
+        <li data-level="H2">
+          <a href="{{site.baseurl}}/Performance-testing/">Performance Testing</a>
+        </li>
+        <li data-level="H2">
+          <a href="{{site.baseurl}}/Application-testing/">Application Testing</a>
+        </li>
+      </ul>
+    </ul>
+  </nav>
+
+  <article>
+    <h1>
+      {{ page.title }}
+    </h1>
+
+    {{ content }}
+  </article>
+</main>

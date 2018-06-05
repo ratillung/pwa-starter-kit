@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="description" content="An end-to-end solution for building high-quality PWAs">
+  <title>Configuring And Personalizing &ndash; PWA Starter Kit</title>
+  <link rel="shortcut icon" sizes="32x32" href="/images/icon-32.png">
+  <meta name="theme-color" content="#000">
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <nav class="main-nav">
+    <a class="logo" href="/">PWA Starter Kit</a>
+    <div class="flex"></div>
+    <a class="main-nav-item" href="https://github.com/polymer/pwa-starter-kit">Github</a>
+    <a class="main-nav-item" href="/Setup">Get Started</a>
+    <a class="main-nav-item" href="/What's-in-the-box">Sample apps</a>
+  </nav>
+
+  <main>
+  <nav class="toc">
+    <ul data-depth="1">
+      <li data-level="H2">
+        <a href="/What's-in-the-box/">What's In The Box</a>
+      </li>
+      <ul data-depth="2">
+        <li data-level="H2">
+          <a href="/Setup/">Setup</a>
+        </li>
+        <li data-level="H2">
+          <a href="/Browser-support/">Browser Support</a>
+        </li>
+        <li data-level="H2">
+          <a href="/Home/">Sample apps</a>
+        </li>
+      </ul>
+      <li data-level="H2">
+        <a href="/Configuring-and-personalizing/">Configuring And Personalizing</a>
+      </li>
+
+      <li data-level="H2">
+        <a href="/Redux-and-state-management/">Redux And State Management</a>
+      </li>
+
+      <li data-level="H2">
+        <a href="/Building-&amp;-Deploying/">Building &amp; Deploying</a>
+      </li>
+
+      <li data-level="H2">Testing</li>
+      <ul data-depth="2">
+        <li data-level="H2">
+          <a href="/Performance-testing/">Performance Testing</a>
+        </li>
+        <li data-level="H2">
+          <a href="/Application-testing/">Application Testing</a>
+        </li>
+      </ul>
+    </ul>
+  </nav>
+
+  <article>
+    <h1>
+      Configuring And Personalizing
+    </h1>
+
+    <p>This page will take you through the steps you need to do to modify the app and add your own content.</p>
+
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+  <li><a href="#folder-structure">Folder structure</a></li>
+  <li><a href="#naming-and-code-conventions">Naming and code conventions</a></li>
+  <li><a href="#customizing-the-app">Customizing the app</a>
+    <ul>
+      <li><a href="#changing-the-name-of-your-app">Changing the name of your app</a></li>
+      <li><a href="#adding-a-new-page">Adding a new page</a></li>
+      <li><a href="#using-icons">Using icons</a></li>
+      <li><a href="#sharing-styles">Sharing styles</a></li>
+      <li><a href="#fonts">Fonts</a></li>
+      <li><a href="#but-i-dont-want-to-use-redux">But I don’t want to use Redux</a></li>
+    </ul>
+  </li>
+  <li><a href="#advanced-topics">Advanced topics</a>
+    <ul>
+      <li><a href="#responsive-layout">Responsive layout</a></li>
+      <li><a href="#conditionally-rendering-views">Conditionally rendering views</a></li>
+      <li><a href="#routing">Routing</a></li>
+      <li><a href="#seo">SEO</a></li>
+      <li><a href="#fetching-data">Fetching data</a></li>
+      <li><a href="#responding-to-network-state-changes">Responding to network state changes</a></li>
+      <li><a href="#state-management">State management</a></li>
+      <li><a href="#theming">Theming</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="folder-structure">Folder structure</h1>
+<p>Your app will be initialized with a bunch of folders and files, that looks like this</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>my-app
+├── images
+│   └── favicon.ico
+│   └── manifest
+│       └── icon-48x48.png
+│       └── ...
+└── src
+   └── store.js
+   └── actions
+        └── ...
+    └── reducers
+        └── ...
+    └── components
+        └── ...
+└── test
+    └── unit
+        └── ...
+    └── integration
+        └── ...
+├── index.html
+├── README.md
+├── package.json
+├── polymer.json
+├── manifest.json
+├── service-worker.js
+├── sw-precache-config.js
+├── wct.conf.json
+├── .travis.yml
+</code></pre></div></div>
+<ul>
+  <li><code class="highlighter-rouge">images/</code> has your logos and favicons. If you needed to add any other assets to your application, this would be a good place for them.</li>
+  <li><code class="highlighter-rouge">src/</code> is where all the code lives. It’s broken down in 4 areas:
+    <ul>
+      <li><code class="highlighter-rouge">components/</code> is the directory that contains all the custom elements in the application</li>
+      <li><code class="highlighter-rouge">actions/</code>, <code class="highlighter-rouge">reducers/</code> and <code class="highlighter-rouge">store.js</code> are Redux specific files and folders. Check out the <a href="https://github.com/Polymer/pwa-starter-kit/wiki/4.-Redux-and-state-management">Redux and state management</a> page for details on that setup.</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">test/</code> is the directory with all of your tests. it’s split in <code class="highlighter-rouge">unit</code> tests (that are run across different browsers), and <code class="highlighter-rouge">integration</code> tests, that just run on headless Chrome to ensure that the end-to-end application runs and is accessible. Check out the <a href="https://github.com/Polymer/pwa-starter-kit/wiki/7.-Application-testing">application testing</a> page for more information.</li>
+  <li><code class="highlighter-rouge">index.html</code> is your application’s starting point. It’s where you load your polyfills and the main entry point element.</li>
+  <li><code class="highlighter-rouge">package.json</code>: the <code class="highlighter-rouge">npm</code> configuration file, where you specify your dependencies. Make sure you run <code class="highlighter-rouge">npm install</code> any time you make any changes to this file.</li>
+  <li><code class="highlighter-rouge">polymer.json</code>: the <code class="highlighter-rouge">polymer cli</code> configuration file, that specifies how your project should be bundled, what’s included in the service worker, etc. <a href="https://www.polymer-project.org/2.0/docs/tools/polymer-json">docs</a></li>
+  <li><code class="highlighter-rouge">manifest.json</code> is the PWA <a href="https://developers.google.com/web/fundamentals/web-app-manifest/">metadata file</a>. It contains the name, theme color and logos for your app, that are used whenever a user adds your application to the homescreen</li>
+  <li><code class="highlighter-rouge">service-worker.js</code> is a placeholder file for your Service Worker. In each build directory, the <code class="highlighter-rouge">polymer cli</code> will populate this file with <a href="https://www.polymer-project.org/2.0/toolbox/service-worker">actual contents</a>, but during development it is disabled.</li>
+  <li><code class="highlighter-rouge">sw-precache-config.js</code> is a <a href="https://www.polymer-project.org/2.0/toolbox/service-worker">configuration file</a> that sets up the precaching behaviour of the Service Worker (such as which files to be precached, the navigation fallback, etc)</li>
+  <li><code class="highlighter-rouge">wct.conf.json</code> is the <a href="https://github.com/Polymer/web-component-tester">web-component-tester</a> configuration file, that specifies the folder to run tests from, etc.</li>
+  <li><code class="highlighter-rouge">.travis.yml</code> sets up the integration testing we run on every commit on <a href="https://docs.travis-ci.com/user/customizing-the-build/">Travis</a>.</li>
+</ul>
+
+<p>You can add more app-specific folders if you want, to keep your code organized – for example, you might want to create a <code class="highlighter-rouge">src/views/</code> folder and move all the top-level views in there.</p>
+
+<h1 id="naming-and-code-conventions">Naming and code conventions</h1>
+<p>This section covers some background about the naming and coding conventions you will find in this template:</p>
+<ul>
+  <li>generally, an element <code class="highlighter-rouge">&lt;sample-element&gt;</code> will be created in a file called <code class="highlighter-rouge">src/components/sample-element.html</code>, and the class used to register it will be called <code class="highlighter-rouge">SampleElement</code>.</li>
+  <li>the elements use a mix of Polymer 3 and <code class="highlighter-rouge">lit-html</code> via the <a href="https://github.com/Polymer/lit-element"><code class="highlighter-rouge">LitElement</code></a> base class. The structure of one of these elements is basically:</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LitElement</span><span class="p">,</span> <span class="nx">html</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'@polymer/lit-element'</span><span class="p">;</span>
+<span class="kd">class</span> <span class="nx">SampleElement</span> <span class="kd">extends</span> <span class="nx">LitElement</span> <span class="p">{</span>
+  <span class="c1">// The properties that your element exposes.</span>
+  <span class="kr">static</span> <span class="kd">get</span> <span class="nx">properties</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="p">{</span>
+    <span class="na">publicProperty</span><span class="p">:</span> <span class="nb">Number</span><span class="p">,</span>
+    <span class="na">_privateProperty</span><span class="p">:</span> <span class="nb">String</span>    <span class="cm">/* note the leading underscore */</span>
+  <span class="p">}};</span>
+
+  <span class="kd">constructor</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">super</span><span class="p">();</span>
+    <span class="c1">// Set up the property defaults here</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">publicProperty</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_privateProperty</span> <span class="o">=</span> <span class="s1">''</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">_render</span><span class="p">({</span><span class="nx">publicProperty</span><span class="p">,</span> <span class="nx">_privateProperty</span><span class="p">})</span> <span class="p">{</span>
+    <span class="c1">// Note the use of the object spread to explicitely</span>
+    <span class="c1">// call out which properties you're using for rendering.</span>
+
+    <span class="c1">// Anything code that is related to rendering should be done in here.</span>
+
+    <span class="k">return</span> <span class="nx">html</span><span class="s2">`
+      &lt;!-- your element's template goes here --&gt;
+    `</span><span class="p">;</span>
+  <span class="p">});</span>
+
+  <span class="nx">_firstRendered</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// Any code that relies on render having been called once goes here.</span>
+    <span class="c1">// (for example setting up listeners, etc)</span>
+  <span class="p">}</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+<span class="nb">window</span><span class="p">.</span><span class="nx">customElements</span><span class="p">.</span><span class="nx">define</span><span class="p">(</span><span class="s1">'sample-element'</span><span class="p">,</span> <span class="nx">SampleElement</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>note that private properties are named with a leading underscore (<code class="highlighter-rouge">_foo</code> instead of <code class="highlighter-rouge">foo</code>). Since JavaScript doesn’t have proper private properties, this in a coding convention that implies this property shouldn’t be used outside of the element itself (so you would never write <code class="highlighter-rouge">&lt;sample-element _foo="bar"&gt;</code>)</li>
+</ul>
+
+<h1 id="customizing-the-app">Customizing the app</h1>
+<p>Here are some changes you might want to make to your app to personalize it.</p>
+
+<h2 id="changing-the-name-of-your-app">Changing the name of your app</h2>
+<p>By default, your app is called <code class="highlighter-rouge">my-app</code>. If you want to change this (which you obviously will), you’ll want to make changes in a bunch of places:</p>
+<ul>
+  <li>config files: <code class="highlighter-rouge">package.json</code>, <code class="highlighter-rouge">polymer.json</code> and <code class="highlighter-rouge">manifest.json</code></li>
+  <li>in the app: <code class="highlighter-rouge">index.html</code>, the <code class="highlighter-rouge">&lt;title&gt;</code>, several <code class="highlighter-rouge">meta</code> fields, and the <code class="highlighter-rouge">appTitle</code> attribute on the <code class="highlighter-rouge">&lt;my-app&gt;</code> element.</li>
+</ul>
+
+<h2 id="adding-a-new-page">Adding a new page</h2>
+<p>There are 4 places where the active page is used at any time:</p>
+<ul>
+  <li>as a view in the <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/components/my-app.js#L197"><code class="highlighter-rouge">&lt;main&gt;</code></a> element</li>
+  <li>as a navigation link in the <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/components/my-app.js#L189"><code class="highlighter-rouge">drawer &lt;nav&gt;</code></a> element. This is the side nav that is shown in the small-screen (i.e. mobile) view</li>
+  <li>as a navigation link in the <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/components/my-app.js#L179"><code class="highlighter-rouge">toolbar &lt;nav&gt;</code></a> element. This is the toolbar that is shown in the wide-screen (i.e. desktop) view</li>
+  <li>in the code for <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/actions/app.js#L29">lazy loading</a> pages. We explicitly list these pages, rather that doing something like <code class="highlighter-rouge">import('./my-'+page+'.js')</code>, so that the bundler knows these are separate routes, and bundles their dependencies accordingly. ⚠️Don’t change this! :)</li>
+</ul>
+
+<p>To add a new page, you need to add a new entry in each of these places. Note that if you only want to add an external link or button in the toolbar, then you can skip adding anything to the <code class="highlighter-rouge">&lt;main&gt;</code> element.</p>
+
+<h3 id="create-a-new-page">Create a new page</h3>
+<p>First, let’s create a new element, that will represent the new view for the page. The easiest way to do this is to copy the <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/components/my-view404.js"><code class="highlighter-rouge">&lt;my-view404&gt;</code></a> element, since that’s a good and basic starting point:</p>
+<ul>
+  <li>Copy that file, and rename it to <code class="highlighter-rouge">my-view4.js</code>. We’re going to assume the element’s name is also <code class="highlighter-rouge">my-view4</code>, but if you want to use a name that makes more sense (like <code class="highlighter-rouge">about-page</code> or something), you can totally use that – just make sure you are consistent!</li>
+  <li>In this new file, rename the class to <code class="highlighter-rouge">MyView404</code> to <code class="highlighter-rouge">MyView4</code> (in 2 places), and the element’s name to <code class="highlighter-rouge">my-view4</code>. When you’re done, it should look like this:</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">html</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'@polymer/lit-element/lit-element.js'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">PageViewElement</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'./page-view-element.js'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">SharedStyles</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'./shared-styles.js'</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nx">MyView4</span> <span class="kd">extends</span> <span class="nx">PageViewElement</span> <span class="p">{</span>
+  <span class="nx">_render</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">html</span><span class="s2">`
+      </span><span class="p">${</span><span class="nx">SharedStyles</span><span class="p">}</span><span class="s2">
+      &lt;section&gt;
+        &lt;h2&gt;Oops! You hit a 404&lt;/h2&gt;
+        &lt;p&gt;The page you're looking for doesn't seem to exist. Head back
+           &lt;a href="/"&gt;home&lt;/a&gt; and try again?
+        &lt;/p&gt;
+      &lt;/section&gt;
+    `</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="nb">window</span><span class="p">.</span><span class="nx">customElements</span><span class="p">.</span><span class="nx">define</span><span class="p">(</span><span class="s1">'my-view4'</span><span class="p">,</span> <span class="nx">MyView4</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>(🔎This page extends <code class="highlighter-rouge">PageViewElement</code> rather than <code class="highlighter-rouge">LitElement</code> as an optimization; for more details on that, check out the <a href="https://github.com/PolymerLabs/pwa-starter-kit/wiki/3.-Configuring-and-personalizing#conditionally-rendering-views">conditional rendering</a> section)</p>
+
+<h3 id="adding-the-page-to-the-application">Adding the page to the application</h3>
+<p>Great! Now we that we have our new element, we need to add it to the application!</p>
+
+<p>First, add it to each of the list of nav links. In the toolbar (the wide-screen view) add:</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;nav</span> <span class="na">class=</span><span class="s">"toolbar-list"</span><span class="nt">&gt;</span>
+  ...
+  <span class="nt">&lt;a</span> <span class="na">selected</span><span class="err">?="${</span><span class="na">_page =</span><span class="s">==</span> <span class="err">'</span><span class="na">view4</span><span class="err">'}"</span> <span class="na">href=</span><span class="s">"/view4"</span><span class="nt">&gt;</span>New View!<span class="nt">&lt;/a&gt;</span>
+<span class="nt">&lt;/nav&gt;</span>
+</code></pre></div></div>
+
+<p>Similarly, we can add it to the list of nav links in the drawer:</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;nav</span> <span class="na">class=</span><span class="s">"drawer-list"</span><span class="nt">&gt;</span>
+  ...
+  <span class="nt">&lt;a</span> <span class="na">selected</span><span class="err">?="${</span><span class="na">_page =</span><span class="s">==</span> <span class="err">'</span><span class="na">view4</span><span class="err">'}"</span> <span class="na">href=</span><span class="s">"$/view4"</span><span class="nt">&gt;</span>New View!<span class="nt">&lt;/a&gt;</span>
+<span class="nt">&lt;/nav&gt;</span>
+</code></pre></div></div>
+
+<p>And in the main content itself:</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;main</span> <span class="na">class=</span><span class="s">"main-content"</span><span class="nt">&gt;</span>
+  ...
+  <span class="nt">&lt;my-view4</span> <span class="na">class=</span><span class="s">"page"</span> <span class="na">active</span><span class="err">?="${</span><span class="na">_page =</span><span class="s">==</span> <span class="err">'</span><span class="na">view4</span><span class="err">'}"</span><span class="nt">&gt;&lt;/my-view4&gt;</span>
+<span class="nt">&lt;/main&gt;</span>
+</code></pre></div></div>
+
+<p>Note that in all of these code snippets, the <code class="highlighter-rouge">selected</code> attribute is used to <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/components/my-app.js#L93">highlight</a> the active page, and the <code class="highlighter-rouge">active</code> attribute is also used to ensure that only the active page is <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/components/page-view-element.js#L16">actually rendered</a>.</p>
+
+<p>Finally, we need to lazy load this page. Without this, the links will appear, but they won’t be able to navigate to your new page, since <code class="highlighter-rouge">my-view4</code> will be undefined (we haven’t imported its source code anywhere). In the <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/actions/app.js#L29"><code class="highlighter-rouge">loadPage </code> action creator</a>, add a new <code class="highlighter-rouge">case</code> statement:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">switch</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">page</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">...</span>
+  <span class="k">case</span> <span class="s1">'view4'</span><span class="p">:</span>
+    <span class="kr">await</span> <span class="k">import</span><span class="p">(</span><span class="s1">'../components/my-view4.js'</span><span class="p">);</span>
+    <span class="k">break</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Don’t worry if you don’t know what an <em>action creator</em> is yet. You can find a complete explanation of how it fits into the state management story in the <a href="https://github.com/Polymer/pwa-starter-kit/wiki/4.-Redux-and-state-management">Redux</a> page.</p>
+
+<p>That’s it! Now, if you refresh the page, you should be able to see the new link and page. Don’t forget to re-build your application before you deploy to production (or test that build), since this new page needs to be added to the output.</p>
+
+<h3 id="adding-the-page-to-the-push-manifest">Adding the page to the push manifest</h3>
+
+<p>To take advantage of HTTP/2 server push, you need to specify what scripts are needed for the new page. Add a new entry to <code class="highlighter-rouge">push-manifest.json</code>:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+  <span class="s2">"/view4"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"src/components/my-app.js"</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"script"</span><span class="p">,</span>
+      <span class="s2">"weight"</span><span class="p">:</span> <span class="mi">1</span>
+    <span class="p">},</span>
+    <span class="s2">"src/components/my-view4.js"</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"script"</span><span class="p">,</span>
+      <span class="s2">"weight"</span><span class="p">:</span> <span class="mi">1</span>
+    <span class="p">},</span>
+    <span class="s2">"node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"script"</span><span class="p">,</span>
+      <span class="s2">"weight"</span><span class="p">:</span> <span class="mi">1</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+
+  <span class="cm">/* other entries */</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="using-icons">Using icons</h2>
+<p>You can inline an <code class="highlighter-rouge">&lt;svg&gt;</code> directly where you need it in the page, but if there’s any reusable icons you’d
+like to define once and use in several places, <code class="highlighter-rouge">my-icons.js</code> is a good spot for that. To add a new icon, you
+can just add a new line to that file:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">const</span> <span class="nx">closeIcon</span> <span class="o">=</span> <span class="nx">html</span><span class="s2">`&lt;svg&gt;...&lt;/svg&gt;`</span>
+</code></pre></div></div>
+
+<p>Then, you can import it and use it as a template literal in an element’s <code class="highlighter-rouge">_render()</code> method:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">closeIcon</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'./my-icons.js'</span><span class="p">;</span>
+<span class="nx">_render</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">html</span><span class="s2">`
+    &lt;button title="close"&gt;</span><span class="p">${</span><span class="nx">closeIcon</span><span class="p">}</span><span class="s2">&lt;/button&gt;
+  `</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="sharing-styles">Sharing styles</h2>
+<p>Similarly, shared styles are also just exported template literals. If you take a look at <code class="highlighter-rouge">shared-styles.js</code>, it
+exports a <code class="highlighter-rouge">&lt;style&gt;</code> node template, that is then inlined in an element’s <code class="highlighter-rouge">_render()</code> method:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">SharedStyles</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'./shared-styles.js'</span><span class="p">;</span>
+<span class="nx">_render</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">html</span><span class="s2">`
+    </span><span class="p">${</span><span class="nx">SharedStyles</span><span class="p">}</span><span class="s2">
+    &lt;div&gt;...&lt;/div&gt;
+  `</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="fonts">Fonts</h2>
+<p>The app doesn’t use any web fonts for the content copy, but does use a Google font for the app title. Be careful not too load too many fonts, however: aside from increasing the download size of your first page, web fonts also  <a href="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/webfont-optimization">slow down the performance</a> of an app, and cause flashes of unstyled content.</p>
+
+<h2 id="but-i-dont-want-to-use-redux">But I don’t want to use Redux</h2>
+<p>The <code class="highlighter-rouge">pwa-starter-kit</code> is supposed to be the well-lit path to building a fairly complex PWA, but it should in no way feel restrictive. If you know what you’re doing, and don’t want to use Redux to manage your application’s state, that’s totally fine! We’ve created a separate template, <a href="https://github.com/Polymer/pwa-starter-kit/tree/template-no-redux"><code class="highlighter-rouge">template-no-redux</code></a>, that has the same UI and PWA elements as the main template, but does not have Redux.</p>
+
+<p>Instead, it uses a unidirectional data flow approach: some elements are in charge of <a href="https://github.com/Polymer/pwa-starter-kit/blob/template-no-redux/src/components/my-view2.js#L43">maintaining the state</a> for their section of the application, and they <a href="https://github.com/Polymer/pwa-starter-kit/blob/template-no-redux/src/components/my-view2.js#L32">pass that data down</a> to children elements. In response, when the children elements need to update the state, they <a href="https://github.com/Polymer/pwa-starter-kit/blob/template-no-redux/src/components/counter-element.js#L49">fire an event</a>.</p>
+
+<h1 id="advanced-topics">Advanced topics</h1>
+
+<h2 id="responsive-layout">Responsive layout</h2>
+<p>By default, the <code class="highlighter-rouge">pwa-starter-kit</code> comes with a responsive layout. At <code class="highlighter-rouge">460px</code>, the application switches from a wide, desktop view to a small, mobile one. You can change this value if you want the mobile layout to apply at a different size.</p>
+
+<p>For a different kind of responsive layout, the <a href="https://github.com/Polymer/pwa-starter-kit/tree/template-responsive-drawer-layout"><code class="highlighter-rouge">template-responsive-drawer-layout</code></a> template displays a persistent app-drawer, inline with the content on wide screens (and uses the same small-screen drawer as the main template).</p>
+
+<h4 id="changing-the-wide-screen-styles">Changing the wide screen styles</h4>
+<p>The wide screen styles are controlled in CSS by a <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/components/my-app.js#L150">media-query</a>. In that block you can add any selectors that would only apply when the window viewport’s width is at least <code class="highlighter-rouge">460px</code>; you can change this pixel value if you want to change the size at which these styles get applied (or, can add a separate style if you want to have several breakpoints).</p>
+
+<h4 id="changing-narrow-screen-styles">Changing narrow screen styles</h4>
+<p>The rest of the styles in <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/components/my-app.js#L35"><code class="highlighter-rouge">my-app</code></a> are outside of the media-query, and thus are either general styles (if they’re not overwritten by the media-query styles), or narrow-screen specific, like <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/components/my-app.js#L81">this one</a> (in this example, the  <code class="highlighter-rouge">&lt;nav class="toolbar-list"&gt;</code> is hidden in the narrow screen view, and visible in the wide screen view)</p>
+
+<h4 id="responsive-styles-in-javascript">Responsive styles in JavaScript</h4>
+<p>If you want to run specific JavaScript code when the size changes from a wide to narrow screen (for example, to make the drawer persistent, etc), you can use the <a href="https://github.com/Polymer/pwa-helpers/blob/master/media-query.js"><code class="highlighter-rouge">installMediaQueryWatcher</code></a> helper from <code class="highlighter-rouge">pwa-helpers</code>. When you <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/components/my-app.js#L233">set it up</a>, you can specify the callback that is ran whenever the media query matches.</p>
+
+<h2 id="conditionally-rendering-views">Conditionally rendering views</h2>
+<p>Which view is visible at a given time is controlled through an <code class="highlighter-rouge">active</code> attribute, that is set if the name of the page matches the location, and is then used for <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/components/my-app.js#L137">styling</a>:</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;style&gt;</span>
+  <span class="nc">.main-content</span> <span class="nc">.page</span> <span class="p">{</span>
+    <span class="nl">display</span><span class="p">:</span> <span class="nb">none</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="nc">.main-content</span> <span class="nc">.page</span><span class="o">[</span><span class="nt">active</span><span class="o">]</span> <span class="p">{</span>
+    <span class="nl">display</span><span class="p">:</span> <span class="nb">block</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="nt">&lt;/style&gt;</span>
+<span class="nt">&lt;main</span> <span class="na">class=</span><span class="s">"main-content"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;my-view1</span> <span class="na">class=</span><span class="s">"page"</span> <span class="na">active</span><span class="err">?="${</span><span class="na">page =</span><span class="s">==</span> <span class="err">'</span><span class="na">view1</span><span class="err">'}"</span><span class="nt">&gt;&lt;/my-view1&gt;</span>
+  <span class="nt">&lt;my-view2</span> <span class="na">class=</span><span class="s">"page"</span> <span class="na">active</span><span class="err">?="${</span><span class="na">page =</span><span class="s">==</span> <span class="err">'</span><span class="na">view2</span><span class="err">'}"</span><span class="nt">&gt;&lt;/my-view2&gt;</span>
+  ...
+<span class="nt">&lt;/main&gt;</span>
+</code></pre></div></div>
+
+<p>However, just because a particular view isn’t visible doesn’t mean it’s “inactive” – its JavaScript can still run. In particular, if your application is using Redux, and the view is connected (like <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/components/my-view2.js#L17"><code class="highlighter-rouge">my-view2</code></a> for example), then it will get notified <strong>any</strong> time the Redux store changes, which could trigger <code class="highlighter-rouge">_render()</code> to be called. Most of the time this is probably not what you want – a hidden view shouldn’t be updating itself until it’s actually visible on screen. Apart from being inefficient (you’re doing work that nobody is looking at), you could run into really weird side effects: if a view’s <code class="highlighter-rouge">_render()</code> function also updates the title of the application, for example, the title may end up being set incorrectly by one of these inactive views, just because it was the last view to set it.</p>
+
+<p>To get around that, the views inherit from a <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/components/page-view-element.js"><code class="highlighter-rouge">PageViewElement</code></a> base class, rather than <code class="highlighter-rouge">LitElement</code> directly. This base class checks whether the <code class="highlighter-rouge">active</code> attribute is set on the host (the same attribute we use for styling), and calls <code class="highlighter-rouge">_render()</code> only if it <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/components/page-view-element.js#L15">is set</a>.</p>
+
+<p>If this isn’t the behaviour you want, and you want hidden pages to update behind the scenes, then all you have to do is change the view’s base class back to <code class="highlighter-rouge">LitElement</code> (i.e. changing <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/components/my-view1.js#L15">this line</a>). Just look out for those side effects!</p>
+
+<h2 id="routing">Routing</h2>
+<p>The app uses a very <a href="https://github.com/Polymer/pwa-helpers/blob/master/router.js">basic router</a>, that listens to changes to the <code class="highlighter-rouge">window.location</code>. You install the router by passing it a callback, which is a function that will be called any time the location changes:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">installRouter</span><span class="p">((</span><span class="nx">location</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">_locationChanged</span><span class="p">(</span><span class="nx">location</span><span class="p">));</span>
+</code></pre></div></div>
+<p>Then, whenever a link is clicked (or the user navigates back to a page), <code class="highlighter-rouge">this._locationChanged</code> is called with the new location. You can check the <a href="https://github.com/Polymer/pwa-starter-kit/wiki/4.-Redux-and-state-management#routing">Redux page</a> to see how this location is stored in the Redux store.</p>
+
+<p>Sometimes you might need to update this location (and the Redux store) imperatively – for example if you have custom code for link hijacking, or you’re managing page navigations in a custom way. In that case, you can manually update the browser’s history state yourself, and then call the <code class="highlighter-rouge">this._locationChanged</code> method manually (thus simulating an action from the router):</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// This function would get called whenever you want</span>
+<span class="c1">// to manually manage the location.</span>
+
+<span class="nx">onArticleLinkClick</span><span class="p">(</span><span class="nx">page</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">newLocation</span> <span class="o">=</span> <span class="s2">`/article/</span><span class="p">${</span><span class="nx">page</span><span class="p">}</span><span class="s2">`</span>
+  <span class="nb">window</span><span class="p">.</span><span class="nx">history</span><span class="p">.</span><span class="nx">pushState</span><span class="p">({},</span> <span class="s1">''</span><span class="p">,</span> <span class="nx">newLocation</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">_updateLocation</span><span class="p">(</span><span class="nx">newLocation</span><span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="seo">SEO</h2>
+<p>We’ve added a starting point for adding rich social graph content to each pages, both using the <a href="http://ogp.me/">Open Graph</a> protocol (used on Facebook, Slack etc) and <a href="https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/abouts-cards">Twitter cards</a>.</p>
+
+<p>This is done in two places:</p>
+<ul>
+  <li>statically, in the <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/index.html#L60"><code class="highlighter-rouge">index.html</code></a>. These are used by the homepage, and represent any of the common metadata across all pages (for example, if you don’t have a page specific description or image, etc).</li>
+  <li>automatically, after you change pages, in <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/components/my-app.js#L240"><code class="highlighter-rouge">my-app.js</code></a>, using the <a href="https://github.com/Polymer/pwa-helpers/blob/master/metadata.js"><code class="highlighter-rouge">updateMetadata</code></a> helper from <code class="highlighter-rouge">pwa-helpers</code>. By default, we update the url and the title of each page, but there are multiple ways in which you can add page-specific content that depend on your apps.</li>
+</ul>
+
+<p>A different approach is to update this metadata differently, depending on what page you are. For example, the <strong>Books</strong> doesn’t update the metadata in the main <a href="https://github.com/PolymerLabs/books/blob/master/src/components/book-app.js#L47">top-level element</a>, but on specific sub-pages. It uses the image thumbnail of a book only on the <a href="https://github.com/PolymerLabs/books/blob/master/src/components/book-detail.js#L61">detail pages</a>, and adds the search query on the <a href="https://github.com/PolymerLabs/books/blob/master/src/components/book-explore.js#L35">explore page</a>.</p>
+
+<p>If you want to test how your site is viewed by Googlebot, Sam Li has a great <a href="https://medium.com/dev-channel/polymer-2-and-googlebot-2ad50c5727dd">article</a> on gotchas to look out for – in particular, the testing section covers a couple tools you can use, such as <a href="https://support.google.com/webmasters/answer/6066468?hl=en">Fetch as Google</a> and <a href="https://search.google.com/test/mobile-friendly">Mobile-Friendly Test</a>.</p>
+
+<h2 id="fetching-data">Fetching data</h2>
+<p>If you want to fetch data from an API or a different server, we recommend dispatching an action creator from a component, and making that fetch asynchronously in a Redux action. For example, the <strong>Flash Cards</strong> sample app dispatches a <a href="https://github.com/notwaldorf/flash-cards/blob/master/src/components/my-app.js#L142"><code class="highlighter-rouge">loadAll</code></a> action creator when the main element boots up; it is that action creator that then does the <a href="https://github.com/notwaldorf/flash-cards/blob/master/src/components/my-app.js#L142">actual fetch</a> of the file and sends it back to the main component by adding the data to the state <a href="https://github.com/notwaldorf/flash-cards/blob/master/src/reducers/data.js#L7">in a reducer</a>.</p>
+
+<p>A similar approach is taken in the <strong>Hacker News</strong> app where an element <a href="https://github.com/PolymerLabs/polymer-redux-hn/blob/master/src/components/hn-item.js#L45">dispatches an action creator</a>, and it’s that action creator that actually <a href="https://github.com/PolymerLabs/polymer-redux-hn/blob/master/src/actions/items.js#L15">fetches the data</a> from the HN api.</p>
+
+<h2 id="responding-to-network-state-changes">Responding to network state changes</h2>
+<p>You might want to change your UI as a response to the network state changing (i.e. going from offline to online).</p>
+
+<p>Using the <a href="https://github.com/Polymer/pwa-helpers/blob/master/network.js"><code class="highlighter-rouge">installOfflineWatcher</code></a> helper from <code class="highlighter-rouge">pwa-helpers</code>, we’ve added a <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/components/my-app.js#L232">callback</a> that will be called any time we go online or offline. In particular, we’ve added a <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/components/my-app.js#L208">snackbar</a> that gets shown; you can configure its contents and style in <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/components/snack-bar.js"><code class="highlighter-rouge">snack-bar.js</code></a>. Note that the snackbar is shown as a result of a Redux <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/actions/app.js#L69">action creator</a> being dispatched, and its duration can be configured there.</p>
+
+<p>Rather than just using it as an fyi, you can use the offline status to display conditional UI in your application. For example, the <strong>Books</strong> sample app displays an <a href="https://github.com/PolymerLabs/books/blob/master/src/components/book-offline.js">offline view</a> rather than the details view when the <a href="https://github.com/PolymerLabs/books/blob/master/src/components/book-detail.js#L293">application is offline</a>.</p>
+
+<h2 id="state-management">State management</h2>
+<p>There are many different ways in which you can manage your application’s state, and choosing the right one depends a lot on the size of your team and application. For simple applications, a uni-directional data flow pattern might be enough (the top level, <code class="highlighter-rouge">&lt;my-app&gt;</code> element could be in charge of being the source of state truth, and it could pass it down to each of the elements, as needed); if that’s what you’re looking for, check out the <a href="https://github.com/Polymer/pwa-starter-kit/tree/template-no-redux"><code class="highlighter-rouge">template-no-redux</code></a> branch.</p>
+
+<p>Another popular approach is <a href="https://redux.js.org/">Redux</a>, which keeps the state in a store outside of the app, and passes immutable copies to each element. To see how that is setup up, check out the <a href="https://github.com/Polymer/pwa-starter-kit/wiki/4.-Redux-and-state-management">Redux and state management</a> section for an explainer, and more details.</p>
+
+<h2 id="theming">Theming</h2>
+<p>This section is useful both if you want to change the default colours of the app, or if you want to let your users be able to switch between different themes.</p>
+
+<h4 id="changing-the-default-colours">Changing the default colours</h4>
+<p>For ease of theming, we’ve defined all of the colours the application uses as <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/--*">CSS custom properties</a>, in the <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/components/my-app.js#L40"><code class="highlighter-rouge">&lt;my-app&gt;</code></a> element. Custom properties are variables that can be reused throughout your CSS. For example, to change the application header to be white text on a lavender background, then you need to update the following properties:</p>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">--app-header-background-color</span><span class="o">:</span> <span class="nt">lavender</span><span class="o">;</span>
+<span class="nt">--app-header-text-color</span><span class="o">:</span> <span class="nt">black</span><span class="o">;</span>
+</code></pre></div></div>
+
+<p>And similarly for the other UI elements in the application.</p>
+
+<h4 id="switching-themes">Switching themes</h4>
+<p>Re-theming the entire app basically involves updating the custom properties that are used throughout the app.
+If you just want to personalize the default template with your own theme, all you have to do is change the values of the app’s <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/components/my-app.js#L40">custom properties</a>.</p>
+
+<p>If you want to be able to switch between two different themes in the app (for example between a “light” and “dark” theme), you could just add a class (for example, <code class="highlighter-rouge">dark-theme</code>) to the <code class="highlighter-rouge">my-app</code> element for the new theme, and style that separately. This would end up looking similar to this:</p>
+
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">:host</span> <span class="p">{</span>
+  <span class="c">/* This is the default, light theme */</span>
+  <span class="py">--app-primary-color</span><span class="p">:</span> <span class="no">red</span><span class="p">;</span>
+  <span class="py">--app-secondary-color</span><span class="p">:</span> <span class="no">black</span><span class="p">;</span>
+  <span class="py">--app-text-color</span><span class="p">:</span> <span class="n">var</span><span class="p">(</span><span class="n">--app-secondary-color</span><span class="p">);</span>
+  <span class="py">--app-header-background-color</span><span class="p">:</span> <span class="no">white</span><span class="p">;</span>
+  <span class="py">--app-header-text-color</span><span class="p">:</span> <span class="n">var</span><span class="p">(</span><span class="n">--app-text-color</span><span class="p">);</span>
+  <span class="err">...</span>
+<span class="p">}</span>
+
+<span class="nd">:host</span><span class="nc">.dark-theme</span> <span class="p">{</span>
+  <span class="c">/* This is the dark theme */</span>
+  <span class="py">--app-primary-color</span><span class="p">:</span> <span class="no">yellow</span><span class="p">;</span>
+  <span class="py">--app-secondary-color</span><span class="p">:</span> <span class="no">white</span><span class="p">;</span>
+  <span class="py">--app-text-color</span><span class="p">:</span> <span class="n">var</span><span class="p">(</span><span class="n">--app-secondary-color</span><span class="p">);</span>
+  <span class="py">--app-header-background-color</span><span class="p">:</span> <span class="no">black</span><span class="p">;</span>
+  <span class="py">--app-header-text-color</span><span class="p">:</span> <span class="n">var</span><span class="p">(</span><span class="n">--app-text-color</span><span class="p">);</span>
+  <span class="err">...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>You control when this class is added; this could be when a “use dark theme” button is clicked, or based on a hash parameter in the location, or the time of day, etc.</p>
+
+<h2 id="next-steps">Next steps</h2>
+<p>Now that you’re done configuring your application, check out the next steps:</p>
+<ul>
+  <li><a href="https://github.com/Polymer/pwa-starter-kit/wiki/6.-Performance-testing">Testing the performance</a> of your  app to ensure your users have a fast experience</li>
+  <li><a href="https://github.com/Polymer/pwa-starter-kit/wiki/7.-Application-testing">General testing</a> your app to make sure new changes don’t accidentally cause regressions</li>
+  <li><a href="https://github.com/Polymer/pwa-starter-kit/wiki/5.-Building-&amp;-Deploying">Building and deploying</a> to production</li>
+</ul>
+
+  </article>
+</main>
+
+
+  <footer>
+    <a target="_blank" href="http://polymer.github.io/LICENSE.txt" data-outbound="license-txt">© 2018 Google</a>
+  </footer>
+</body>
+</html>

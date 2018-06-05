@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="description" content="An end-to-end solution for building high-quality PWAs">
+  <title>Application Testing &ndash; PWA Starter Kit</title>
+  <link rel="shortcut icon" sizes="32x32" href="/images/icon-32.png">
+  <meta name="theme-color" content="#000">
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <nav class="main-nav">
+    <a class="logo" href="/">PWA Starter Kit</a>
+    <div class="flex"></div>
+    <a class="main-nav-item" href="https://github.com/polymer/pwa-starter-kit">Github</a>
+    <a class="main-nav-item" href="/Setup">Get Started</a>
+    <a class="main-nav-item" href="/What's-in-the-box">Sample apps</a>
+  </nav>
+
+  <main>
+  <nav class="toc">
+    <ul data-depth="1">
+      <li data-level="H2">
+        <a href="/What's-in-the-box/">What's In The Box</a>
+      </li>
+      <ul data-depth="2">
+        <li data-level="H2">
+          <a href="/Setup/">Setup</a>
+        </li>
+        <li data-level="H2">
+          <a href="/Browser-support/">Browser Support</a>
+        </li>
+        <li data-level="H2">
+          <a href="/Home/">Sample apps</a>
+        </li>
+      </ul>
+      <li data-level="H2">
+        <a href="/Configuring-and-personalizing/">Configuring And Personalizing</a>
+      </li>
+
+      <li data-level="H2">
+        <a href="/Redux-and-state-management/">Redux And State Management</a>
+      </li>
+
+      <li data-level="H2">
+        <a href="/Building-&amp;-Deploying/">Building &amp; Deploying</a>
+      </li>
+
+      <li data-level="H2">Testing</li>
+      <ul data-depth="2">
+        <li data-level="H2">
+          <a href="/Performance-testing/">Performance Testing</a>
+        </li>
+        <li data-level="H2">
+          <a href="/Application-testing/">Application Testing</a>
+        </li>
+      </ul>
+    </ul>
+  </nav>
+
+  <article>
+    <h1>
+      Application Testing
+    </h1>
+
+    <p>It is good to test your apps. This page will take you through the testing setup we have provided.</p>
+
+<h2 id="running-tests">Running tests</h2>
+<p>There are many ways to test your app, and many frameworks in which you can write your tests. We provided samples for both unit tests and integration tests below – the integration tests use <a href="https://github.com/GoogleChrome/puppeteer">Puppeteer</a>, and the unit tests use <a href="https://github.com/Polymer/web-component-tester">WCT</a>. As you modify and the customize your app, make sure you also update the tests :)</p>
+
+<p>The test folder has the following structure:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>test
+├── integration
+|   └── screenshots-baseline
+|   └── router.js
+|   └── visual.js
+├── unit
+|   └── index.html
+|   └── counter-element.js
+|   └── views-a11y.js
+</code></pre></div></div>
+<p>Where</p>
+<ul>
+  <li><code class="highlighter-rouge">screenshots-baseline</code> is the golden (“correct”) set of screenshots for the app, as used in visual testing</li>
+  <li><code class="highlighter-rouge">router.js</code> tests that the router is working correctly, and clicking on the nav links actually does a navigation</li>
+  <li><code class="highlighter-rouge">visual.js</code> does a visual diffing of what your application currently looks like, and what it <em>should</em> look like according to the screenshots in <code class="highlighter-rouge">screenshots-baseline</code></li>
+  <li><code class="highlighter-rouge">counter-element.js</code> is a WCT unit test that tests the simple counter element used in the first Redux demo</li>
+  <li><code class="highlighter-rouge">views-a11y.js</code> is a WCT unit test that uses <a href="https://github.com/dequelabs/axe-core">axe-core</a> to test that each of the application’s views are accessible</li>
+</ul>
+
+<p>You can run the entire test suite via</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm test
+</code></pre></div></div>
+
+<p>Or a particular test suite via</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm run test:unit
+npm run test:integration
+</code></pre></div></div>
+
+<h2 id="unit-testing">Unit testing</h2>
+
+<h3 id="basic-testing">Basic testing</h3>
+<p>We use <a href="https://github.com/Polymer/web-component-tester">WCT</a> to run unit tests. WCT comes pre-packaged with <code class="highlighter-rouge">&lt;test-fixture&gt;</code>, an element that defines a template of content and copies a clean, new instance of that content into each test suite (more information <a href="https://www.polymer-project.org/2.0/docs/tools/tests#test-fixtures">here</a>). To add a new unit test to the suite:</p>
+<ul>
+  <li>create a new file under <code class="highlighter-rouge">test/unit/</code> (or just copy and rename <code class="highlighter-rouge">test/unit/counter-element</code> for a starting point</li>
+  <li>add the test to the WCT suite, in <code class="highlighter-rouge">test/unit/index.html</code>:</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">WCT</span><span class="p">.</span><span class="nx">loadSuites</span><span class="p">([</span>
+  <span class="p">...</span> 
+  <span class="c1">// Load 'my-new-test.html' test suite, using native shadow dom:</span>
+  <span class="s1">'my-new-test.html'</span><span class="p">,</span>
+  <span class="c1">// Load 'my-new-test.html' test suite, using shadydom</span>
+  <span class="s1">'my-new-test.html?wc-shadydom=true&amp;wc-ce=true'</span><span class="p">,</span>
+<span class="p">]);</span>
+</code></pre></div></div>
+<ul>
+  <li>once you’ve added the new tests to this test suite, you can run the unit tests via
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm run test:unit
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>By default, the tests will be run on all of your local browsers (note that if you’re on a Mac OS machine, you might have to <a href="https://webkit.org/blog/6900/webdriver-support-in-safari-10/">enable remote automation</a> in Safari from the “Develop” menu for this to work correctly). If you want to configure the browsers used for testing, you can use the <code class="highlighter-rouge">-l</code> command line argument:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm run test:unit -l chrome -l firefox
+</code></pre></div></div>
+
+<p>For more information on writing unit tests with WCT, check out the <a href="https://www.polymer-project.org/2.0/docs/tools/tests#overview">testing documentation</a> or the <a href="https://github.com/Polymer/web-component-tester#test-fixture">WCT documentation</a>.</p>
+
+<h3 id="a11y-testing">A11y testing</h3>
+<p><a href="[axe-core](https://github.com/dequelabs/axe-core)">Axe-core</a> is a library that automatically audits your HTML for accessibility violations. In order to use this more easily inside of unit tests, we’ve created a small wrapper, <a href="https://github.com/Polymer/pwa-helpers#axe-reportjs"><code class="highlighter-rouge">axe-report.js</code></a>, that returns an <code class="highlighter-rouge">Error</code> containing all the violations. You can use this to unit test a <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/test/unit/counter-element.html#L70">specific element</a> or a <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/test/unit/views-a11y.html">whole page</a> as well. If you already have a <code class="highlighter-rouge">WCT</code> unit test set up to test the functionality of an element <code class="highlighter-rouge">el</code>, then you can also add an a11y test for it via:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span><span class="nx">axeReport</span><span class="p">}</span> <span class="k">from</span> <span class="s1">'../axe-report.js'</span><span class="p">;</span>
+<span class="nx">suite</span><span class="p">(</span><span class="s1">'my-element tests'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">test</span><span class="p">(</span><span class="s1">'a11y'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">el</span> <span class="o">=</span> <span class="nx">fixture</span><span class="p">(</span><span class="s1">'some-fixture'</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">axeReport</span><span class="p">(</span><span class="nx">el</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="setting-up-travis">Setting up Travis</h3>
+<p>By default <code class="highlighter-rouge">npm test</code> runs the tests on the command line. However, you can set up a continuous integration server,
+like <a href="https://travis-ci.org/">Travis</a>, to run the tests every time a new commit is made.</p>
+
+<p>Before you do anything, make sure you’ve set up Travis on your Github repository according to the <a href="https://docs.travis-ci.com/user/getting-started/">Getting Started</a> guide, including flipping your repo “on” on your <a href="https://travis-ci.org/profile">Travis profile page</a></p>
+
+<p>The <code class="highlighter-rouge">pwa-starter-kit</code> Travis config lives in <code class="highlighter-rouge">.travis.yml</code>, and has a couple of different configurations in its matrix</p>
+<ul>
+  <li><code class="highlighter-rouge">os: osx</code> is a macOS build, which runs the integration tests. This is because in order to match, the baseline tests needs to be ran on the same OS as the tests (or else you’re likely to run into web font problems). On our team, we generated the screenshots on a macOS machine, so it makes sense the tests are setup in the same way.</li>
+  <li><code class="highlighter-rouge">os: linux</code> runs the unit tests on Firefox/Chrome</li>
+  <li><a href="https://saucelabs.com/">SauceLabs</a> testing for browsers that aren’t available on Travis, such as Edge.</li>
+</ul>
+
+<p>To trigger your first continuous integration test, push a new commit to a branch.</p>
+
+<h3 id="saucelabs-testing">SauceLabs testing</h3>
+<p>At the moment, Travis CI only has Mac OS and Linux VMs, which means you need to use a separate third-party service to automate testing on Microsoft browsers. We use <a href="https://saucelabs.com/">SauceLabs</a> for this, and in order to set it up on Travis, you need to include some private keys in the <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/.travis.yml#L20">.travis.yml</a> file (see the <a href="https://docs.travis-ci.com/user/sauce-connect/">SauceConnect docs</a>, <a href="https://docs.travis-ci.com/user/environment-variables#Defining-encrypted-variables-in-.travis.yml">encrypted variables docs</a>). If you don’t want to use SauceLabs at all, delete <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/.travis.yml#L19">this line</a> and <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/.travis.yml#L20">this section</a> from the configuration file.</p>
+
+<h2 id="integration-testing-with-puppeteer">Integration testing with Puppeteer</h2>
+<p><a href="https://github.com/GoogleChrome/puppeteer">Puppeteer</a> is an <code class="highlighter-rouge">npm</code> library that lets you control Chrome. It makes it really easy to do things like click on particular elements in the page, wait until certain elements are loaded, and take screenshots. Because it only runs in Chrome, we’re only including it as an easy way to do basic integration testing – making sure that the basics of your app don’t break in between commits.</p>
+
+<h3 id="router-tests">Router tests</h3>
+<p>The router tests (in <code class="highlighter-rouge">test/integration/router.js</code>) provide you with a starting point for using Puppeteer to interact with your page. They show you how you can find a particular node in a shadow root (like the navigation links), and interact with it (in particular, by clicking on it).</p>
+
+<p>We’ve provided two different examples of doing the same thing (clicking on a node): by injecting a “deep” query selector into your testing page, and using that to find a particular node, or by using the Puppeteer API to target the node on the test side.</p>
+
+<h3 id="screenshot-testing">Screenshot testing</h3>
+<p>Another thing that is useful to test is seeing if the app has changed visually. The examples we’ve provided test the layout of the app in both wide and narrow screen viewports (since the layout changes). If you want to add a new kind of visual test, you should add a new test suite, similar to <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/test/integration/visual.js#L50">this one</a>, where in the <code class="highlighter-rouge">beforeEach</code> method you would use Puppeteer methods (similar to the code in the <code class="highlighter-rouge">router.js</code> tests) to set up the screenshot: clicking on some elements, focusing inputs, submitting forms, etc.</p>
+
+<p>The “golden” (or baseline) screenshots are generated by the <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/test/integration/screenshots-baseline/regenerate.js"><code class="highlighter-rouge">regenerate-baseline.js</code></a> script. If you want to test new parts of the app (for example, a mobile layout with the drawer open), make sure that you add both a new function to generate the screenshot with a similar set up as your test.</p>
+
+<p>Note that if you run <code class="highlighter-rouge">pwa-starter-kit</code>’s screenshot tests fresh after cloning the repo, they might fail: this is because the checked in baseline screenshots are rendered on a MacOS machine, and if you’re running the tests on a different platform, the app might render slightly differently (most likely due to the font metrics not being identical). You should re-generate the baseline screenshots in this case, and then try the test again.</p>
+
+  </article>
+</main>
+
+
+  <footer>
+    <a target="_blank" href="http://polymer.github.io/LICENSE.txt" data-outbound="license-txt">© 2018 Google</a>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="description" content="An end-to-end solution for building high-quality PWAs">
+  <title>Performance Testing &ndash; PWA Starter Kit</title>
+  <link rel="shortcut icon" sizes="32x32" href="/images/icon-32.png">
+  <meta name="theme-color" content="#000">
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <nav class="main-nav">
+    <a class="logo" href="/">PWA Starter Kit</a>
+    <div class="flex"></div>
+    <a class="main-nav-item" href="https://github.com/polymer/pwa-starter-kit">Github</a>
+    <a class="main-nav-item" href="/Setup">Get Started</a>
+    <a class="main-nav-item" href="/What's-in-the-box">Sample apps</a>
+  </nav>
+
+  <main>
+  <nav class="toc">
+    <ul data-depth="1">
+      <li data-level="H2">
+        <a href="/What's-in-the-box/">What's In The Box</a>
+      </li>
+      <ul data-depth="2">
+        <li data-level="H2">
+          <a href="/Setup/">Setup</a>
+        </li>
+        <li data-level="H2">
+          <a href="/Browser-support/">Browser Support</a>
+        </li>
+        <li data-level="H2">
+          <a href="/Home/">Sample apps</a>
+        </li>
+      </ul>
+      <li data-level="H2">
+        <a href="/Configuring-and-personalizing/">Configuring And Personalizing</a>
+      </li>
+
+      <li data-level="H2">
+        <a href="/Redux-and-state-management/">Redux And State Management</a>
+      </li>
+
+      <li data-level="H2">
+        <a href="/Building-&amp;-Deploying/">Building &amp; Deploying</a>
+      </li>
+
+      <li data-level="H2">Testing</li>
+      <ul data-depth="2">
+        <li data-level="H2">
+          <a href="/Performance-testing/">Performance Testing</a>
+        </li>
+        <li data-level="H2">
+          <a href="/Application-testing/">Application Testing</a>
+        </li>
+      </ul>
+    </ul>
+  </nav>
+
+  <article>
+    <h1>
+      Performance Testing
+    </h1>
+
+    <p>This page takes you through the tools you can use to measure your application’s performance.</p>
+
+<h2 id="loading-performance">Loading performance</h2>
+<p><code class="highlighter-rouge">pwa-starter-kit</code> is built using the <a href="https://developers.google.com/web/fundamentals/performance/prpl-pattern/">PRPL pattern</a>, which is a new approach for structuring and serving PWAs, with an emphasis on performance. It stands for:</p>
+<ul>
+  <li><strong>Push</strong> critical resources for the initial URL route. This is achieved by using HTTP2 push, and covered in the <a href="https://github.com/Polymer/pwa-starter-kit/wiki/5.-Building-&amp;-Deploying#h2-server-push-optional">Building and Deploying</a> section</li>
+  <li><strong>Render</strong> initial route. In order to get render the requested page as quickly as possible, each route should only load exactly what it needs, and not any resources that are needed by other, yet un-requested parts of the app</li>
+  <li><strong>Pre-cache</strong> remaining routes. Once the requested page has loaded, a Service Worker will be installed and it will pre-cache the fragments specified in your <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/polymer.json#L4">polymer.json</a>.</li>
+  <li><strong>Lazy-load</strong> and create remaining routes on demand. When the user switches routes, the app lazy-loads any required resources that haven’t been cached yet by the Service Worker, and creates the views.</li>
+</ul>
+
+<h2 id="lazy-loading">Lazy-loading</h2>
+<p>Lazy loading is an important aspect of <code class="highlighter-rouge">pwa-starter-kit</code>, since it makes sure each route only loads exactly what it needs to render something to the screen, and any extra work is done afterwards. There are several places in the app where this is done:</p>
+
+<h3 id="lazy-loading-routes">Lazy-loading routes</h3>
+<p>The actual JavaScript code for each route is only loaded if that route is requested. This is done in the <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/actions/app.js#L29"><code class="highlighter-rouge">loadPage</code></a> action creator, which is called any time you perform a navigation.</p>
+
+<h3 id="lazy-loading-reducers">Lazy-loading reducers</h3>
+<p>If a route is connected to the Redux store, since it is lazy-loaded, then its reducers must be as well. The <a href="https://github.com/Polymer/pwa-starter-kit/wiki/4.-Redux-and-state-management#lazy-loading">Redux and state management</a> page covers how to set up your store to accommodate lazy loading reducers, and gives you an <a href="https://github.com/Polymer/pwa-starter-kit/blob/master/src/components/my-view2.js#L23">example</a> of how this is done in <code class="highlighter-rouge">pwa-starter-kit</code></p>
+
+<h2 id="measuring-performance">Measuring performance</h2>
+<p>There are a few <a href="https://developers.google.com/web/fundamentals/performance/rail#tools">tools</a> to help you measure and automate your performance measurements.</p>
+
+<h3 id="lighthouse">Lighthouse</h3>
+<p><a href="https://developers.google.com/web/tools/lighthouse/">Lighthouse</a> is an open source tool that helps you measure and improve the performance of your page. It comes as a Chrome DevTools extension or a node module, so that you can run it in the command line (and integrated it with your other automated Node testing). Once it’s ran, it gives you an overall score, and suggestions for each area of improvement:</p>
+
+<p><img width="1552" alt="screenshot of lighthouse results" src="https://user-images.githubusercontent.com/1369170/39538144-ae72695c-4df0-11e8-8240-72f4bc4738b4.png" /></p>
+
+<h3 id="webpagetest">WebPageTest</h3>
+<p><a href="https://www.webpagetest.org/easy">WebPageTest</a> is an application that loads your page on an actual Moto G4 device with a slow 3G connection, and then gives you a details report on the page’s load performance in that scenario. It is very useful to see how your application performs in a real-world, non-testing environment.</p>
+
+<p>For example <a href="https://www.webpagetest.org/result/180502_2J_6637ba5cf9264c1e8d048a9bc17b204b/">here</a> is a run testing the deployed <code class="highlighter-rouge">pwa-starter-kit</code>.</p>
+
+<p>In particular, the <a href="https://www.webpagetest.org/video/compare.php?tests=180502_2J_6637ba5cf9264c1e8d048a9bc17b204b-r%3A1-c%3A0&amp;thumbSize=200&amp;ival=100&amp;end=visual">film strip view</a> is very useful, since it shows you a timeline of when your application actually first paints to the screen:</p>
+
+<p><img width="897" alt="screen shot 2018-05-02 at 11 00 46 am" src="https://user-images.githubusercontent.com/1369170/39540684-3c8ff676-4df8-11e8-8239-23f89c76ffec.png" /></p>
+
+<p>Interactive timeline of your resources loading, and who generated the requests
+<img width="926" alt="screen shot 2018-05-02 at 11 01 02 am" src="https://user-images.githubusercontent.com/1369170/39540689-3dfebc04-4df8-11e8-9159-430aaed9ba1a.png" /></p>
+
+
+  </article>
+</main>
+
+
+  <footer>
+    <a target="_blank" href="http://polymer.github.io/LICENSE.txt" data-outbound="license-txt">© 2018 Google</a>
+  </footer>
+</body>
+</html>

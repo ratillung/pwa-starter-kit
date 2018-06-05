@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="description" content="An end-to-end solution for building high-quality PWAs">
+  <title>Browser Support &ndash; PWA Starter Kit</title>
+  <link rel="shortcut icon" sizes="32x32" href="/images/icon-32.png">
+  <meta name="theme-color" content="#000">
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <nav class="main-nav">
+    <a class="logo" href="/">PWA Starter Kit</a>
+    <div class="flex"></div>
+    <a class="main-nav-item" href="https://github.com/polymer/pwa-starter-kit">Github</a>
+    <a class="main-nav-item" href="/Setup">Get Started</a>
+    <a class="main-nav-item" href="/What's-in-the-box">Sample apps</a>
+  </nav>
+
+  <main>
+  <nav class="toc">
+    <ul data-depth="1">
+      <li data-level="H2">
+        <a href="/What's-in-the-box/">What's In The Box</a>
+      </li>
+      <ul data-depth="2">
+        <li data-level="H2">
+          <a href="/Setup/">Setup</a>
+        </li>
+        <li data-level="H2">
+          <a href="/Browser-support/">Browser Support</a>
+        </li>
+        <li data-level="H2">
+          <a href="/Home/">Sample apps</a>
+        </li>
+      </ul>
+      <li data-level="H2">
+        <a href="/Configuring-and-personalizing/">Configuring And Personalizing</a>
+      </li>
+
+      <li data-level="H2">
+        <a href="/Redux-and-state-management/">Redux And State Management</a>
+      </li>
+
+      <li data-level="H2">
+        <a href="/Building-&amp;-Deploying/">Building &amp; Deploying</a>
+      </li>
+
+      <li data-level="H2">Testing</li>
+      <ul data-depth="2">
+        <li data-level="H2">
+          <a href="/Performance-testing/">Performance Testing</a>
+        </li>
+        <li data-level="H2">
+          <a href="/Application-testing/">Application Testing</a>
+        </li>
+      </ul>
+    </ul>
+  </nav>
+
+  <article>
+    <h1>
+      Browser Support
+    </h1>
+
+    <p><code class="highlighter-rouge">pwa-starter-kit</code> uses fairly recent browsers APIs, from new JavaScript language features, to new DOM specs:</p>
+<ul>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/customElements">Custom Elements</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/attachShadow">Shadow DOM</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_variables">Custom CSS properties</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import">JS modules</a></li>
+  <li>Dynamic JS modules via <a href="https://github.com/tc39/proposal-dynamic-import"><code class="highlighter-rouge">import()</code></a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch"><code class="highlighter-rouge">fetch()</code></a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes"><code class="highlighter-rouge">class</code> syntax</a></li>
+  <li><a href="https://github.com/tc39/proposal-object-rest-spread">Object rest/spread properties</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function"><code class="highlighter-rouge">async</code></a>/<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await"><code class="highlighter-rouge">await</code></a></li>
+</ul>
+
+<p>At the time of writing, Chrome 60, Safari 11.1, and iOS 11.3 natively support all of these features, out of the box. To run <code class="highlighter-rouge">pwa-starter-kit</code> on other browsers, you need to use a combination of polyfills and transpilation (e.g. babel).</p>
+
+<p>This step is automated by the <code class="highlighter-rouge">npm run build</code> script for you, but in case you want to roll your own building and bundling strategy, here is an overview of what is needed and where:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Feature</th>
+      <th style="text-align: center">Action needed</th>
+      <th style="text-align: right">On what browsers</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Custom Elements</td>
+      <td style="text-align: center"><a href="https://github.com/webcomponents/webcomponentsjs">Polyfill</a></td>
+      <td style="text-align: right"><a href="https://caniuse.com/#feat=custom-elementsv1">IE11, Edge, Firefox, Safari&lt;11</a></td>
+    </tr>
+    <tr>
+      <td>Shadow DOM</td>
+      <td style="text-align: center"><a href="https://github.com/webcomponents/webcomponentsjs">Polyfill</a></td>
+      <td style="text-align: right"><a href="https://caniuse.com/#feat=shadowdomv1">IE11, Edge, Firefox, Safari&lt;11</a></td>
+    </tr>
+    <tr>
+      <td>Class syntax</td>
+      <td style="text-align: center">Transpile (babel), extra <a href="https://github.com/webcomponents/webcomponentsjs#custom-elements-es5-adapterjs">adapter</a> for Custom Elements/Shadow DOM</td>
+      <td style="text-align: right"><a href="https://caniuse.com/#feat=es6-class">IE11</a></td>
+    </tr>
+    <tr>
+      <td>Promises</td>
+      <td style="text-align: center"><a href="https://github.com/stefanpenner/es6-promise">Polyfill</a></td>
+      <td style="text-align: right"><a href="https://caniuse.com/#feat=promises">IE11</a></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">fetch()</code></td>
+      <td style="text-align: center"><a href="https://github.com/github/fetch">Polyfill</a></td>
+      <td style="text-align: right"><a href="https://caniuse.com/#feat=fetch">IE11, iOS &lt;10.2</a></td>
+    </tr>
+    <tr>
+      <td>Object rest/spread properties</td>
+      <td style="text-align: center">Transpile (babel)</td>
+      <td style="text-align: right"><a href="http://kangax.github.io/compat-table/es2016plus/#test-object_rest/spread_properties">IE11, Edge, Safari&lt;11.1</a></td>
+    </tr>
+    <tr>
+      <td>JS modules</td>
+      <td style="text-align: center">Polyfill</td>
+      <td style="text-align: right"><a href="https://caniuse.com/#feat=es6-module">IE11, Firefox, iOS &lt;10.3</a></td>
+    </tr>
+    <tr>
+      <td>Dynamic JS modules (<code class="highlighter-rouge">import()</code>)</td>
+      <td style="text-align: center">Polyfill, a module loader (webpack)</td>
+      <td style="text-align: right"> </td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">async</code>/<code class="highlighter-rouge">await</code></td>
+      <td style="text-align: center">Transpile (babel)</td>
+      <td style="text-align: right"><a href="https://caniuse.com/#feat=async-functions">IE11</a></td>
+    </tr>
+  </tbody>
+</table>
+
+
+  </article>
+</main>
+
+
+  <footer>
+    <a target="_blank" href="http://polymer.github.io/LICENSE.txt" data-outbound="license-txt">© 2018 Google</a>
+  </footer>
+</body>
+</html>

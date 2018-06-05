@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="description" content="An end-to-end solution for building high-quality PWAs">
+  <title>Home &ndash; PWA Starter Kit</title>
+  <link rel="shortcut icon" sizes="32x32" href="/images/icon-32.png">
+  <meta name="theme-color" content="#000">
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <nav class="main-nav">
+    <a class="logo" href="/">PWA Starter Kit</a>
+    <div class="flex"></div>
+    <a class="main-nav-item" href="https://github.com/polymer/pwa-starter-kit">Github</a>
+    <a class="main-nav-item" href="/Setup">Get Started</a>
+    <a class="main-nav-item" href="/What's-in-the-box">Sample apps</a>
+  </nav>
+
+  <main>
+  <nav class="toc">
+    <ul data-depth="1">
+      <li data-level="H2">
+        <a href="/What's-in-the-box/">What's In The Box</a>
+      </li>
+      <ul data-depth="2">
+        <li data-level="H2">
+          <a href="/Setup/">Setup</a>
+        </li>
+        <li data-level="H2">
+          <a href="/Browser-support/">Browser Support</a>
+        </li>
+        <li data-level="H2">
+          <a href="/Home/">Sample apps</a>
+        </li>
+      </ul>
+      <li data-level="H2">
+        <a href="/Configuring-and-personalizing/">Configuring And Personalizing</a>
+      </li>
+
+      <li data-level="H2">
+        <a href="/Redux-and-state-management/">Redux And State Management</a>
+      </li>
+
+      <li data-level="H2">
+        <a href="/Building-&amp;-Deploying/">Building &amp; Deploying</a>
+      </li>
+
+      <li data-level="H2">Testing</li>
+      <ul data-depth="2">
+        <li data-level="H2">
+          <a href="/Performance-testing/">Performance Testing</a>
+        </li>
+        <li data-level="H2">
+          <a href="/Application-testing/">Application Testing</a>
+        </li>
+      </ul>
+    </ul>
+  </nav>
+
+  <article>
+    <h1>
+      Home
+    </h1>
+
+    <p>Welcome to the <code class="highlighter-rouge">pwa-starter-kit</code> wiki! This project contains a set of sample templates that are meant to be used as a starting point for building PWAs, that give you responsive layouts, service workers, state management and more!</p>
+
+<h2 id="sample-apps--">Sample apps    <a href="https://github.com/Polymer/pwa-starter-kit" title="Built with pwa–starter–kit"><img src="https://img.shields.io/badge/built_with-pwa–starter–kit_-blue.svg" alt="Built with pwa–starter–kit" /></a></h2>
+
+<p>Here are some applications that we built with this template:</p>
+
+<h3 id="hacker-news-code-demo">Hacker News (<a href="https://github.com/PolymerLabs/polymer-redux-hn">code</a>, <a href="https://polymer-redux-hn.appspot.com/">demo</a>)</h3>
+<ul>
+  <li>a small Hacker News client, inspired by the <a href="https://hnpwa.com/">HN PWA</a> project that compares implementations for the same PWA app</li>
+  <li>pattern for fetching data from a generic API</li>
+  <li>pattern for using <a href="https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API"><code class="highlighter-rouge">indexedDB</code></a> for local storage.</li>
+</ul>
+
+<h3 id="flash-cards-code-demo">Flash Cards (<a href="https://github.com/notwaldorf/flash-cards">code</a>, <a href="https://flash-cards.netlify.com">demo</a>)</h3>
+<ul>
+  <li>flash-cards game to help you learn Japanese (but can be extended for any language and set of cards)</li>
+  <li>pattern for storing state in <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage"><code class="highlighter-rouge">localStorage</code></a></li>
+  <li>pattern for loading local data <code class="highlighter-rouge">json</code> files</li>
+  <li>uses the <a href="https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis"><code class="highlighter-rouge">SpeechSynthesis</code></a> API</li>
+</ul>
+
+<h3 id="books-code-demo">Books (<a href="https://github.com/PolymerLabs/books">code</a>, <a href="https://books-pwakit.appspot.com/">demo</a>)</h3>
+<ul>
+  <li>app that searches for books using the <a href="https://developers.google.com/books/docs/v1/reference/volumes/list">Google Books API</a></li>
+  <li>shows how to use the <a href="https://developers.google.com/books/docs/viewer/reference">Embedded Viewer API</a> to display book content</li>
+  <li>shows how to use <a href="https://developers.google.com/books/docs/v1/reference/volumes/list">Google Books API</a> to list/update favorites on the authenticated user’s bookshelf</li>
+  <li>pattern for using UI loading placeholders</li>
+  <li>pattern for re-fetching data when the network state changes</li>
+  <li>pattern for integrating <a href="https://developers.google.com/identity/protocols/OAuth2UserAgent">Google Sign-In</a></li>
+  <li>uses the <a href="https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition">SpeechRecognition</a> API</li>
+</ul>
+
+<h3 id="shop-code-demo">Shop (<a href="https://github.com/polymer/shop/tree/lit-element">code</a>, <a href="https://lit-element-dot-polymer-shop.appspot.com/">demo</a>)</h3>
+<ul>
+  <li>a sample e-commerce shopping site</li>
+  <li>pattern for a real-life shopping cart and store checkout flow</li>
+  <li>pattern for using custom announcers for accessibility</li>
+</ul>
+
+  </article>
+</main>
+
+
+  <footer>
+    <a target="_blank" href="http://polymer.github.io/LICENSE.txt" data-outbound="license-txt">© 2018 Google</a>
+  </footer>
+</body>
+</html>
