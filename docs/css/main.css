@@ -10,6 +10,7 @@ body {
   font-weight: 300;
   line-height: 1.5;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  text-rendering: optimizeLegibility;
 }
 
 h1 {
@@ -156,17 +157,17 @@ section {
 .features {
   display: flex;
   justify-content: center;
-  background-color: #333;
+  background-color: #ECEFEF;
+  color: black;
 }
 
 .feature {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 160px;
+  width: 300px;
   padding: 0 16px;
   box-sizing: border-box;
-  color: #FFF;
 }
 
 .feature > .icon {
@@ -306,7 +307,7 @@ article h1 {
   font-weight: 600;
   letter-spacing: normal;
   line-height: 1.1;
-  margin: 40px 0 24px;
+  margin: 0 0 24px 0;
   padding-bottom: 8px;
 }
 article h1:after {
@@ -371,6 +372,24 @@ pre {
   padding: 24px;
   background: #F9F8FB !important;
   overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+thead {
+  text-align: left;
+  background-color: #F9F8FB;
+  font-weight: 600;
+}
+
+tr {
+  border-bottom: 1px solid #EEEBF3;
+}
+
+th, td {
+  padding: 15px 20px;
 }
 
 /* small screen */
