@@ -46,9 +46,10 @@ a {
   height: 64px;
   padding: 0 12px 0 24px;
   box-sizing: border-box;
-  font-size: 18px;
+  font-size: 16px;
   letter-spacing: 1px;
   font-weight: normal;
+  border-bottom: 1px solid #EEEBF3;
 }
 
 .main-nav > a {
@@ -57,17 +58,8 @@ a {
   margin: 0 12px;
 }
 
-.main-nav-item::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 2px;
-}
-
-.main-nav-item:hover::after {
-  border-bottom: 1px solid;
+.main-nav-item:hover {
+  color: #EA3468;
 }
 
 /* home page */
@@ -231,7 +223,9 @@ header {
 }
 
 .toc {
-  /* position: sticky works in Chrome, Firefox, Safari and Edge; fallback to position: static for which the nav will just be part of the scrolling content. */
+  /* position: sticky works in Chrome, Firefox, Safari and Edge;
+  fallback to position: static for which the nav will just be part
+  of the scrolling content. */
   position: -webkit-sticky;
   position: sticky;
   top: 0;
@@ -239,11 +233,14 @@ header {
   width: 340px;
   height: 300px;
   box-sizing: border-box;
-  padding: 56px 24px 40px 40px;
+  padding: 24px;
 }
 
 .toc a:hover {
-  text-decoration: underline;
+  color: #EA3468;
+  -webkit-transition: -webkit-transform .3s ease;
+  -webkit-transition: transform .3s ease;
+  transition: transform .3s ease;
 }
 
 .toc ul {
@@ -251,7 +248,7 @@ header {
 }
 
 .toc ul ul {
-  padding: 8px 0 0 16px;
+  padding: 8px 0 0 40px;
 }
 
 .toc li {
@@ -260,6 +257,9 @@ header {
   font-size: 16px;
   font-weight: 300;
   line-height: 1.5;
+  -webkit-transition: -webkit-transform .3s ease;
+  -webkit-transition: transform .3s ease;
+  transition: transform .3s ease;
 }
 
 .toc li[data-level="H3"] {
@@ -269,12 +269,23 @@ header {
 .toc > ul > li {
   font-weight: bold;
 }
+.toc svg {
+  width: 24px;
+  height: 24px;
+  fill: currentcolor;
+  vertical-align: middle;
+}
+.toc span {
+  display: inline-block;
+  vertical-align: sub;
+  padding: 0 10px;
+}
 
 article {
   max-width: 860px;
   padding: 40px;
   margin: -300px 0 0 340px;
-  border-left: 1px solid #EBEBEC;
+  border-left: 1px solid #EEEBF3;
 }
 
 article > section {
@@ -289,23 +300,20 @@ article h1 {
   line-height: 1.1;
   margin: 40px 0 24px;
   padding-bottom: 8px;
-  text-align: center;
 }
 article h1:after {
   display: block;
   width: 60px;
   height: 5px;
   content: ' ';
-  background: #FAE3E4;
-  margin: 20px auto 0 auto;
+  background: #FADE4B;
+  margin: 20px 0;
 }
 
 article h2 {
   font-weight: 600;
   margin: 64px 0 24px;
   padding-bottom: 8px;
-  border-left: 6px solid #FAE3E4;
-  padding-left: 14px;
 }
 
 article h3 {
@@ -340,16 +348,20 @@ code, pre {
 }
 
 code {
-  color: #0d47a1;
+  background: #F9F8FB;
+  color: black;
   font-weight: 300;
+  font-size: 14px;
+  padding: 4px 8px;
+  word-break: break-all;
 }
 
 pre {
   white-space: pre;
   word-wrap: normal;
   font-size: 14px;
-  padding: 8px;
-  background: #FFF !important;
+  padding: 24px;
+  background: #F9F8FB !important;
   overflow-x: auto;
 }
 
