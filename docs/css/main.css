@@ -341,9 +341,13 @@ code {
   color: black;
   font-size: inherit;
   padding: 4px 8px;
-  word-break: break-all;
+  white-space: nowrap;
 }
 
+pre code {
+  word-break: break-all;
+  white-space: pre;
+}
 pre {
   white-space: pre;
   word-wrap: normal;
