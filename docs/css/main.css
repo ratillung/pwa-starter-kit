@@ -383,7 +383,7 @@ code, pre {
 code {
   background: #F4F4F6;
   color: black;
-  font-size: 14px;
+  font-size: inherit;
   padding: 4px 8px;
   word-break: break-all;
 }
@@ -391,6 +391,7 @@ code {
 pre {
   white-space: pre;
   word-wrap: normal;
+  font-size: 14px;
   padding: 24px;
   background: #F4F4F6;
   overflow-x: auto;
