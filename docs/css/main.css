@@ -58,6 +58,8 @@ a {
   letter-spacing: 1px;
   font-weight: normal;
   border-bottom: 1px solid #EEEBF3;
+  background: #212124;
+  color: white;
 }
 
 .main-nav > a {
@@ -67,7 +69,7 @@ a {
 }
 
 .main-nav-item:hover {
-  color: #EA3468;
+  color: #FADE4B;
 }
 
 /* home page */
@@ -216,10 +218,32 @@ section {
 
 footer {
   display: flex;
-  flex-direction: row-reverse;
   align-items: center;
+  justify-content: center;
   height: 64px;
   padding: 0 24px;
+  background: #F2F3F4;
+  color: rgba(0,0,0,.4);
+  border-top: 1px solid #dadce0;
+  padding: 32px;
+}
+
+footer ul {
+  padding: 0;
+}
+
+footer ul li {
+  display: inline-block;
+}
+
+footer ul li::before {
+  padding: 0 14px;
+  content: '/';
+  color: rgba(0,0,0,.4);
+}
+footer a {
+  color: #202124;
+  font-size: 14px;
 }
 
 /* doc page */
@@ -246,7 +270,7 @@ header {
 }
 
 .toc a:hover {
-  color: #EA3468;
+  border-bottom: 2px solid #FADE4B;
   -webkit-transition: -webkit-transform .3s ease;
   -webkit-transition: transform .3s ease;
   transition: transform .3s ease;
@@ -294,7 +318,7 @@ article {
   max-width: 860px;
   padding: 40px;
   margin: -300px 0 0 340px;
-  border-left: 1px solid #EEEBF3;
+  border-left: 1px solid #dadce0;
 }
 
 article > section {
@@ -357,9 +381,8 @@ code, pre {
 }
 
 code {
-  background: #F9F8FB;
+  background: #F4F4F6;
   color: black;
-  font-weight: 300;
   font-size: 14px;
   padding: 4px 8px;
   word-break: break-all;
@@ -368,9 +391,8 @@ code {
 pre {
   white-space: pre;
   word-wrap: normal;
-  font-size: 14px;
   padding: 24px;
-  background: #F9F8FB !important;
+  background: #F4F4F6;
   overflow-x: auto;
 }
 
@@ -385,7 +407,7 @@ thead {
 }
 
 tr {
-  border-bottom: 1px solid #EEEBF3;
+  border-bottom: 1px solid #dadce0;
 }
 
 th, td {
@@ -439,7 +461,7 @@ th, td {
     padding: 16px 0;
   }
 
-  .feature > iron-icon {
+  .feature > .icon {
     width: 48px;
     height: 48px;
   }
